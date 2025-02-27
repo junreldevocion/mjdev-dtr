@@ -26,13 +26,15 @@ const computedFormData = (formData: FormData) => {
 
   const totalOvertime = totalHoursAndMinutes - 8;
   const overtime = (totalOvertime > 0 ? totalOvertime : 0).toFixed(2);
+  const undertime = (totalOvertime < 0 ? totalOvertime : 0).toFixed(2);
 
   return {
     timeInOutDate,
     timeIn: timeInDate,
     timeOut: timeOutDate,
     hoursWorked,
-    overtime
+    overtime,
+    undertime
   };
 }
 

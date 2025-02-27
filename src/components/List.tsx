@@ -27,9 +27,10 @@ const List = async () => {
               <TableCell colSpan={4} className="text-center">No DTR data available</TableCell>
             </TableRow>
           )}
-          {dtrList.map(({ timeIn, timeOut, timeInOutDate, overtime, hoursWorked, }, index) => {
+          {dtrList.map(({ timeIn, timeOut, timeInOutDate, overtime, hoursWorked, undertime }, index) => {
             const formatOvertime = `${overtime.split('.')[0]} hours ${overtime.split('.')[1]} minutes`;
             const formatHoursWorked = `${hoursWorked.split('.')[0]} hours ${hoursWorked.split('.')[1]} minutes`;
+            const formatUndertime = `${undertime.split('.')[0]} hours ${undertime.split('.')[1]} minutes`;
             return (
               <TableRow key={index}>
                 <TableCell>{new Date(timeInOutDate).toLocaleDateString()}</TableCell>
@@ -37,6 +38,7 @@ const List = async () => {
                 <TableCell className="font-medium">{new Date(timeOut).toLocaleTimeString()}</TableCell>
                 <TableCell className="font-medium">{formatHoursWorked}</TableCell>
                 <TableCell className="font-medium">{formatOvertime}</TableCell>
+                <TableCell className="font-medium">{formatUndertime}</TableCell>
               </TableRow>
             )
           })}
