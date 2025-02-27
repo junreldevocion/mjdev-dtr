@@ -21,6 +21,7 @@ import { cn } from "@/lib/utils"
 import { CalendarIcon } from "lucide-react"
 import { addHours, format } from "date-fns"
 import { createDTR } from "@/app/actions"
+import { DialogTrigger } from "./ui/dialog"
 
 const FormSchema = z.object({
   timeInOutDate: z.date(),
@@ -130,33 +131,10 @@ export function DtrForm() {
             }}
           />
         </div>
-        {/* <div className="flex w-full flex-col md:flex-row justify-end gap-4">
-          <FormField
-            control={form.control}
-            name="overtime"
-            render={({ field }) => {
-              return <FormItem className="flex flex-col w-full">
-                <FormLabel>Overtime In</FormLabel>
-                <Input type="time" {...field} onChange={field.onChange} className="w-full" />
-                <FormMessage />
-              </FormItem>
-            }}
-          />
-          <FormField
-            control={form.control}
-            name="overtime"
-            render={({ field }) => {
-              return <FormItem className="flex flex-col w-full">
-                <FormLabel>Overtime Out</FormLabel>
-                <Input type="time" {...field} onChange={field.onChange} className="w-full" />
-                <FormMessage />
-              </FormItem>
-            }}
-          />
-        </div> */}
-
         <div>
-          <Button type="submit">Submit</Button>
+          <DialogTrigger asChild >
+            <Button type="submit">Submit</Button>
+          </DialogTrigger>
         </div>
       </form>
     </Form >

@@ -52,3 +52,17 @@ export const createDTR = async (formData: FormData) => {
     console.log(error);
   }
 };
+
+export const deleteDTR = async (formData: FormData) => {
+  const id = formData.get('id')
+
+  try {
+    await dtrModel.deleteOne({ _id: id });
+
+    revalidatePath("/");
+  } catch (error) {
+    throw new Error(`error: ${error}`);
+  }
+
+
+}
