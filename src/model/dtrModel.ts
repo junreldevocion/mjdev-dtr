@@ -18,6 +18,6 @@ const DTRSchema: Schema = new Schema<IDTR>({
   overtime: { type: Date, required: false }
 }, options);
 
-const DTR = mongoose.model('DTR') ?? mongoose.model('DTR', DTRSchema);
+const DTR = mongoose.model('DTR', DTRSchema);
 
 export default DTR;
