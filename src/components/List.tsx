@@ -1,36 +1,53 @@
-import { TableCaption, TableHeader, TableRow, TableHead, TableBody, TableCell, Table, TableFooter } from "./ui/table"
 
-const List = () => {
-  return (<div className="pt-4">
-    <Table>
-      <TableCaption>A list of your DTR.</TableCaption>
-      <TableHeader>
-        <TableRow>
-          <TableHead>Date</TableHead>
-          <TableHead>Time in</TableHead>
-          <TableHead>Time out</TableHead>
-          <TableHead>OT</TableHead>
-          <TableHead>Total</TableHead>
-        </TableRow>
-      </TableHeader>
-      <TableBody>
-        <TableRow>
-          <TableCell>Feb. 24, 2025</TableCell>
-          <TableCell className="font-medium">07:02AM</TableCell>
-          <TableCell className="font-medium">05:05PM</TableCell>
-          <TableCell className="font-medium">0</TableCell>
-          <TableCell className="font-medium">8 hours and 30 mins</TableCell>
-        </TableRow>
-      </TableBody>
-      <TableFooter>
-        <TableRow>
-          <TableCell colSpan={3} className="font-medium">Total</TableCell>
-          <TableCell className="font-medium">8 hours and 12 mins</TableCell>
-        </TableRow>
-      </TableFooter>
-    </Table>
-  </div>
-  )
-}
 
-export default List
+import DTR, { IDTR } from "@/model/dtrModel";
+import { TableCaption, TableHeader, TableRow, TableHead, TableBody, TableCell, Table, TableFooter } from "./ui/table";
+
+
+const List = async () => {
+
+  const dtrList: IDTR[] = await DTR.find();
+
+  return (
+    <div className="pt-4 relative overflow-auto">
+      <Table className="w-full">
+        <TableCaption>A list of your DTR.</TableCaption>
+        <TableHeader>
+          <TableRow>
+            <TableHead>Date</TableHead>
+            <TableHead>Time in</TableHead>
+            <TableHead>Time out</TableHead>
+            <TableHead>Hours worked</TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {dtrList.length === 0 && (
+            <TableRow>
+              <TableCell colSpan={4} className="text-center">No DTR data available</TableCell>
+            </TableRow>
+          )}
+          {dtrList.map(({ timeIn, timeOut, timeInOutDate, hoursWorked, }, index) => {
+            return (
+              <TableRow key={index}>
+                <TableCell>{new Date(timeInOutDate).toLocaleDateString()}</TableCell>
+                <TableCell className="font-medium">{new Date(timeIn).toLocaleTimeString()}</TableCell>
+                <TableCell className="font-medium">{new Date(timeOut).toLocaleTimeString()}</TableCell>
+                <TableCell className="font-medium">{hoursWorked}</TableCell>
+              </TableRow>
+            )
+          })}
+        </TableBody>
+        <TableFooter>
+          <TableRow>
+            <TableCell colSpan={3} className="font-medium">Total</TableCell>
+            <TableCell className="font-medium">
+              {(dtrList.reduce((total, { hoursWorked }) => (total + parseFloat(hoursWorked)), 0)).toFixed(2)} hours
+            </TableCell>
+          </TableRow>
+        </TableFooter>
+      </Table>
+    </div>
+  );
+};
+
+export default List;
