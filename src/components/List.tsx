@@ -44,8 +44,6 @@ const List = async () => {
             const formattedTimeIn = format(new Date(timeIn), 'hh:mm a');
             const formattedTimeOut = format(new Date(timeOut), 'hh:mm a');
 
-
-
             return (
               <TableRow key={index}>
                 <TableCell className="whitespace-nowrap">{formattedTimeInOutDate}</TableCell>

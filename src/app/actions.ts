@@ -4,16 +4,18 @@
 
 import { connectToMongoDB } from "@/lib/mongodb";
 import dtrModel from "@/model/dtrModel";
-import { format, parseISO } from "date-fns";
+import { format } from "date-fns";
 import { revalidatePath } from "next/cache";
 
 const computedFormData = (formData: FormData) => {
   const timeInOutDate = formData.get("timeInOutDate");
+  const formattedTimeInOutDate = new Date(timeInOutDate as unknown as string)
+
   const timeIn = formData.get("timeIn");
   const timeOut = formData.get("timeOut");
 
-  const formatDateTimeIn = format(parseISO(timeInOutDate as unknown as string), 'yyyy/MM/dd');
-  const formatDateTimeOut = format(parseISO(timeInOutDate as unknown as string), 'yyyy/MM/dd');
+  const formatDateTimeIn = format(formattedTimeInOutDate, 'yyyy/MM/dd');
+  const formatDateTimeOut = format(formattedTimeInOutDate, 'yyyy/MM/dd');
 
   const timeInDate = new Date(`${formatDateTimeIn} ${timeIn}`)
   const timeOutDate = new Date(`${formatDateTimeOut} ${timeOut}`)
@@ -29,8 +31,10 @@ const computedFormData = (formData: FormData) => {
   const overtime = (totalOvertime > 0 ? totalOvertime : 0).toFixed(2);
   const undertime = (Math.abs(totalOvertime < 0 ? totalOvertime : 0)).toFixed(2);
 
+  console.log(formattedTimeInOutDate, 'formattedTimeInOutDate')
+
   return {
-    timeInOutDate,
+    timeInOutDate: formattedTimeInOutDate,
     timeIn: timeInDate,
     timeOut: timeOutDate,
     hoursWorked,

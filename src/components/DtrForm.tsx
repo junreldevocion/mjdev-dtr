@@ -54,12 +54,9 @@ export function DtrForm() {
           name="timeInOutDate"
           render={({ field }) => {
             const { value, onChange } = field
-            value.setHours(0)
-            value.setMinutes(0)
-            value.setSeconds(0)
             return <FormItem className="flex flex-col">
               <FormLabel>Select date</FormLabel>
-              <Input type="hidden" {...field} value={value.toISOString()} />
+              <Input type="hidden" {...field} value={format(value, 'yyyy-MM-dd')} />
               <Popover>
                 <PopoverTrigger asChild>
                   <FormControl>
