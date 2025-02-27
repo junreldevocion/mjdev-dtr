@@ -5,7 +5,7 @@ export interface IDTR extends Document {
   timeIn: Date;
   timeOut: Date;
   hoursWorked: string;
-  overtime: Date;
+  overtime: string;
 }
 const options = { timestamps: true };
 
@@ -15,9 +15,9 @@ const DTRSchema: Schema = new Schema<IDTR>({
   timeIn: { type: Date, required: true },
   timeOut: { type: Date, required: true },
   hoursWorked: { type: String, required: true },
-  overtime: { type: Date, required: false }
+  overtime: { type: String, required: true },
 }, options);
 
-const DTR = mongoose.model('DTR', DTRSchema);
+const DTR = mongoose.model('DTR') ?? mongoose.model('DTR', DTRSchema);
 
 export default DTR;

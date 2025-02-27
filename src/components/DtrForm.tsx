@@ -130,17 +130,31 @@ export function DtrForm() {
             }}
           />
         </div>
-        <FormField
-          control={form.control}
-          name="overtime"
-          render={({ field }) => {
-            return <FormItem className="flex flex-col w-full">
-              <FormLabel>Overtime</FormLabel>
-              <Input type="time" {...field} onChange={field.onChange} className="w-full" />
-              <FormMessage />
-            </FormItem>
-          }}
-        />
+        {/* <div className="flex w-full flex-col md:flex-row justify-end gap-4">
+          <FormField
+            control={form.control}
+            name="overtime"
+            render={({ field }) => {
+              return <FormItem className="flex flex-col w-full">
+                <FormLabel>Overtime In</FormLabel>
+                <Input type="time" {...field} onChange={field.onChange} className="w-full" />
+                <FormMessage />
+              </FormItem>
+            }}
+          />
+          <FormField
+            control={form.control}
+            name="overtime"
+            render={({ field }) => {
+              return <FormItem className="flex flex-col w-full">
+                <FormLabel>Overtime Out</FormLabel>
+                <Input type="time" {...field} onChange={field.onChange} className="w-full" />
+                <FormMessage />
+              </FormItem>
+            }}
+          />
+        </div> */}
+
         <div>
           <Button type="submit">Submit</Button>
         </div>

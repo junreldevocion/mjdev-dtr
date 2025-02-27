@@ -18,6 +18,7 @@ const List = async () => {
             <TableHead>Time in</TableHead>
             <TableHead>Time out</TableHead>
             <TableHead>Hours worked</TableHead>
+            <TableHead>Overtime</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -26,20 +27,23 @@ const List = async () => {
               <TableCell colSpan={4} className="text-center">No DTR data available</TableCell>
             </TableRow>
           )}
-          {dtrList.map(({ timeIn, timeOut, timeInOutDate, hoursWorked, }, index) => {
+          {dtrList.map(({ timeIn, timeOut, timeInOutDate, overtime, hoursWorked, }, index) => {
+            const formatOvertime = `${overtime.split('.')[0]} hours ${overtime.split('.')[1]} minutes`;
+            const formatHoursWorked = `${hoursWorked.split('.')[0]} hours ${hoursWorked.split('.')[1]} minutes`;
             return (
               <TableRow key={index}>
                 <TableCell>{new Date(timeInOutDate).toLocaleDateString()}</TableCell>
                 <TableCell className="font-medium">{new Date(timeIn).toLocaleTimeString()}</TableCell>
                 <TableCell className="font-medium">{new Date(timeOut).toLocaleTimeString()}</TableCell>
-                <TableCell className="font-medium">{hoursWorked}</TableCell>
+                <TableCell className="font-medium">{formatHoursWorked}</TableCell>
+                <TableCell className="font-medium">{formatOvertime}</TableCell>
               </TableRow>
             )
           })}
         </TableBody>
         <TableFooter>
           <TableRow>
-            <TableCell colSpan={3} className="font-medium">Total</TableCell>
+            <TableCell colSpan={4} className="font-medium">Total</TableCell>
             <TableCell className="font-medium">
               {(dtrList.reduce((total, { hoursWorked }) => (total + parseFloat(hoursWorked)), 0)).toFixed(2)} hours
             </TableCell>

@@ -10,7 +10,6 @@ const computedFormData = (formData: FormData) => {
   const timeInOutDate = formData.get("timeInOutDate");
   const timeIn = formData.get("timeIn");
   const timeOut = formData.get("timeOut");
-  const overtime = formData.get("overtime");
 
   const formatDateTimeIn = format(parseISO(timeInOutDate as unknown as string), 'yyyy/MM/dd');
   const formatDateTimeOut = format(parseISO(timeInOutDate as unknown as string), 'yyyy/MM/dd');
@@ -21,7 +20,12 @@ const computedFormData = (formData: FormData) => {
   const totalHours = timeOutDate.getHours() - timeInDate.getHours();
   const totalMinutes = timeOutDate.getMinutes() - timeInDate.getMinutes();
 
-  const hoursWorked = (totalHours + totalMinutes / 60).toFixed(2);
+  const totalHoursAndMinutes = totalHours + totalMinutes / 60
+
+  const hoursWorked = (totalHoursAndMinutes).toFixed(2);
+
+  const totalOvertime = totalHoursAndMinutes - 8;
+  const overtime = (totalOvertime > 0 ? totalOvertime : 0).toFixed(2);
 
   return {
     timeInOutDate,
