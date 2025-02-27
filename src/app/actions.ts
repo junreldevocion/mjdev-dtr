@@ -2,6 +2,7 @@
 
 
 
+import { connectToMongoDB } from "@/lib/mongodb";
 import dtrModel from "@/model/dtrModel";
 import { format, parseISO } from "date-fns";
 import { revalidatePath } from "next/cache";
@@ -39,6 +40,7 @@ const computedFormData = (formData: FormData) => {
 }
 
 export const createDTR = async (formData: FormData) => {
+  connectToMongoDB()
   const data = computedFormData(formData)
 
   try {
@@ -54,6 +56,7 @@ export const createDTR = async (formData: FormData) => {
 };
 
 export const deleteDTR = async (formData: FormData) => {
+  connectToMongoDB();
   const id = formData.get('id')
 
   try {

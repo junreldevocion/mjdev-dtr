@@ -21,6 +21,6 @@ const DTRSchema: Schema = new Schema<IDTR>({
   undertime: { type: String, required: true },
 }, options);
 
-const DTR = mongoose.model('DTR', DTRSchema);
+const DTR = mongoose.model('DTR') ?? mongoose.model('DTR', DTRSchema);
 
 export default DTR;
