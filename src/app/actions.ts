@@ -6,13 +6,11 @@ import { connectToMongoDB } from "@/lib/mongodb";
 import dtrModel from "@/model/dtrModel";
 import { format } from "date-fns";
 import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
 
-const computedFormData = (formData: FormData) => {
-  const timeInOutDate = formData.get("timeInOutDate");
-  const formattedTimeInOutDate = new Date(timeInOutDate as unknown as string)
+const computedFormData = (timeInOutDate: string, timeIn: string, timeOut: string) => {
 
-  const timeIn = formData.get("timeIn");
-  const timeOut = formData.get("timeOut");
+  const formattedTimeInOutDate = new Date(timeInOutDate)
 
   const formatDateTimeIn = format(formattedTimeInOutDate, 'yyyy/MM/dd');
   const formatDateTimeOut = format(formattedTimeInOutDate, 'yyyy/MM/dd');
@@ -31,8 +29,6 @@ const computedFormData = (formData: FormData) => {
   const overtime = (totalOvertime > 0 ? totalOvertime : 0).toFixed(2);
   const undertime = (Math.abs(totalOvertime < 0 ? totalOvertime : 0)).toFixed(2);
 
-  console.log(formattedTimeInOutDate, 'formattedTimeInOutDate')
-
   return {
     timeInOutDate: formattedTimeInOutDate,
     timeIn: timeInDate,
@@ -45,31 +41,37 @@ const computedFormData = (formData: FormData) => {
 
 export const createDTR = async (formData: FormData) => {
   connectToMongoDB()
-  const data = computedFormData(formData)
 
-  try {
+  const timeInOutDate = formData.get("timeInOutDate");
+  const timeIn = formData.get("timeIn");
+  const timeOut = formData.get("timeOut");
 
-    const newDTR = await dtrModel.create(data);
-    // Saving the new dtr to the database
-    newDTR.save();
-    // Triggering revalidation of the specified path ("/")
-    revalidatePath("/");
-  } catch (error) {
-    console.log(error);
+  const data = computedFormData(timeInOutDate as unknown as string, timeIn as unknown as string, timeOut as unknown as string);
+
+  // Validate the input
+  if (!timeInOutDate || !timeIn || !timeOut) {
+    throw new Error('Missing timeInOutDate, timeIn, or timeOut');
   }
+
+  const newDTR = await dtrModel.create(data);
+  // // Saving the new dtr to the database
+  await newDTR.save();
+  // Triggering revalidation of the specified path ("/")
+  revalidatePath("/");
+  redirect('/')
 };
 
 export const deleteDTR = async (formData: FormData) => {
   connectToMongoDB();
   const id = formData.get('id')
 
-  try {
-    await dtrModel.deleteOne({ _id: id });
-
-    revalidatePath("/");
-  } catch (error) {
-    throw new Error(`error: ${error}`);
+  if (!id) {
+    throw new Error('Missing id');
   }
+
+  await dtrModel.deleteOne({ _id: id });
+
+  revalidatePath("/");
 
 
 }

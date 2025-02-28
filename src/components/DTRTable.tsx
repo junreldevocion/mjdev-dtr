@@ -1,18 +1,21 @@
 
 
-import DTR, { IDTR } from "@/model/dtrModel";
+import { IDTR } from "@/model/dtrModel";
 import { TableCaption, TableHeader, TableRow, TableHead, TableBody, TableCell, Table, TableFooter } from "./ui/table";
 import DeleteDTR from "./DeleteDTR";
 import { format } from "date-fns";
+import { Button } from "./ui/button";
+import { Pencil } from "lucide-react";
+import { calculateTotalHours } from "@/lib/utils";
 
 
-const DTRTable = async () => {
+interface DTRTableProps {
+  dtrList: IDTR[];
+}
 
-  const dtrList: IDTR[] = await DTR.find();
+const DTRTable: React.FC<DTRTableProps> = ({ dtrList }) => {
 
-  const totalHours = (dtrList.reduce((total, { hoursWorked }) => (total + parseFloat(hoursWorked)), 0)).toFixed(2);
-
-  const formattedHours = `${totalHours.split('.')[0]} hours ${totalHours.split('.')[1]} minutes`;
+  const totalHours = calculateTotalHours(dtrList)
 
   return (
     <div className="pt-4 relative overflow-auto">
@@ -46,13 +49,16 @@ const DTRTable = async () => {
 
             return (
               <TableRow key={index}>
-                <TableCell className="whitespace-nowrap">{formattedTimeInOutDate}</TableCell>
+                <TableCell className="font-medium whitespace-nowrap">{formattedTimeInOutDate}</TableCell>
                 <TableCell className="font-medium whitespace-nowrap">{formattedTimeIn}</TableCell>
                 <TableCell className="font-medium whitespace-nowrap">{formattedTimeOut}</TableCell>
                 <TableCell className="font-medium whitespace-nowrap">{formatHoursWorked}</TableCell>
                 <TableCell className="font-medium whitespace-nowrap">{formatOvertime}</TableCell>
                 <TableCell className="font-medium whitespace-nowrap">{formatUndertime}</TableCell>
-                <TableCell><DeleteDTR id={id as string} /></TableCell>
+                <TableCell className="flex gap-2">
+                  <DeleteDTR id={id as string} />
+                  <Button variant="default"><Pencil /></Button>
+                </TableCell>
               </TableRow>
             )
           })}
@@ -60,9 +66,7 @@ const DTRTable = async () => {
         <TableFooter>
           <TableRow>
             <TableCell colSpan={6} className="font-medium">Total</TableCell>
-            <TableCell className="font-medium whitespace-nowrap">
-              {formattedHours}
-            </TableCell>
+            <TableCell className="font-medium whitespace-nowrap">{totalHours}</TableCell>
           </TableRow>
         </TableFooter>
       </Table>
