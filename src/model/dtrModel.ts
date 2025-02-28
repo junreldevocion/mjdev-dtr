@@ -1,7 +1,6 @@
 import mongoose, { Schema, Document, } from 'mongoose';
 
 export interface IDTR extends Document {
-  _id: string;
   timeInOutDate: Date;
   timeIn: Date;
   timeOut: Date;
@@ -21,6 +20,6 @@ const DTRSchema: Schema = new Schema<IDTR>({
   undertime: { type: String, required: true },
 }, options);
 
-const DTR = mongoose.model('DTR', DTRSchema);
+const DTR = mongoose.model('DTR') ?? mongoose.model('DTR', DTRSchema);
 
 export default DTR;

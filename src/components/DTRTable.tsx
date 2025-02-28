@@ -6,7 +6,7 @@ import DeleteDTR from "./DeleteDTR";
 import { format } from "date-fns";
 
 
-const List = async () => {
+const DTRTable = async () => {
 
   const dtrList: IDTR[] = await DTR.find();
 
@@ -52,7 +52,7 @@ const List = async () => {
                 <TableCell className="font-medium whitespace-nowrap">{formatHoursWorked}</TableCell>
                 <TableCell className="font-medium whitespace-nowrap">{formatOvertime}</TableCell>
                 <TableCell className="font-medium whitespace-nowrap">{formatUndertime}</TableCell>
-                <TableCell><DeleteDTR id={id} /></TableCell>
+                <TableCell><DeleteDTR id={id as string} /></TableCell>
               </TableRow>
             )
           })}
@@ -70,4 +70,4 @@ const List = async () => {
   );
 };
 
-export default List;
+export default DTRTable;
