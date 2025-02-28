@@ -24,7 +24,7 @@ export default async function Home() {
         <Dialog>
           <div className="flex justify-between items-center pb-4 flex-wrap gap-4">
             <h1 className="text-2xl font-semibold">Daily Time Record</h1>
-            <h4 className="font-medium tracking-tight text-sm float-left xl:float-end">Total hours rendered: {totalHours}</h4>
+            <h4 className="text-sm font-medium text-gray-500 dark:text-gray-400">Total hours rendered: {totalHours}</h4>
           </div>
           <Link href="/add" className=""><Button variant="outline">Add DTR<Plus /></Button></Link>
           <DialogForm />
