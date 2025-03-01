@@ -2,11 +2,8 @@
 
 import { CircleUserRound } from "lucide-react"
 import Link from "next/link";
-// import { useState } from "react"
-// import { Button } from "./ui/button";
 
 const Navbar = () => {
-  // const [isOpen, setIsOpen] = useState(false);
 
   return (
     <nav className="bg-white border-gray-200 dark:bg-gray-900">
