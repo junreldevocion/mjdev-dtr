@@ -6,7 +6,7 @@ import DeleteDTR from "./DeleteDTR";
 import { format } from "date-fns";
 import { Button } from "./ui/button";
 import { Pencil } from "lucide-react";
-import { calculateTotalHours } from "@/lib/utils";
+import { calculateExactTime, formatTime } from "@/lib/utils";
 
 
 interface DTRTableProps {
@@ -15,7 +15,15 @@ interface DTRTableProps {
 
 const DTRTable: React.FC<DTRTableProps> = ({ dtrList }) => {
 
-  const totalHours = calculateTotalHours(dtrList)
+  const { hours: hoursWorked, minutes: minutesWorked } = calculateExactTime(dtrList, 'hoursWorked')
+  const formattedTimeForHoursWorked = formatTime(hoursWorked.toString(), minutesWorked.toString());
+
+
+  const { hours: hoursOvertime, minutes: minutesOvertime } = calculateExactTime(dtrList, 'overtime')
+  const formattedTimeForOvertime = formatTime(hoursOvertime.toString(), minutesOvertime.toString());
+
+  const { hours: hoursUndertime, minutes: minutesUndertime } = calculateExactTime(dtrList, 'undertime')
+  const formattedTimeForUndertime = formatTime(hoursUndertime.toString(), minutesUndertime.toString());
 
   return (
     <div className="pt-4 relative overflow-auto">
@@ -26,10 +34,10 @@ const DTRTable: React.FC<DTRTableProps> = ({ dtrList }) => {
             <TableHead className="whitespace-nowrap">Date</TableHead>
             <TableHead className="whitespace-nowrap">Time in</TableHead>
             <TableHead className="whitespace-nowrap">Time out</TableHead>
-            <TableHead className="whitespace-nowrap">Hours worked</TableHead>
-            <TableHead className="whitespace-nowrap">Overtime</TableHead>
-            <TableHead className="whitespace-nowrap">Undertime</TableHead>
-            <TableHead>Action</TableHead>
+            <TableHead className="whitespace-nowrap text-center">Hours worked</TableHead>
+            <TableHead className="whitespace-nowrap text-center">Overtime</TableHead>
+            <TableHead className="whitespace-nowrap text-center">Undertime</TableHead>
+            <TableHead className="text-center">Action</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -39,9 +47,6 @@ const DTRTable: React.FC<DTRTableProps> = ({ dtrList }) => {
             </TableRow>
           )}
           {dtrList.map(({ timeIn, timeOut, timeInOutDate, overtime, hoursWorked, undertime, _id: id }, index) => {
-            const formatOvertime = `${overtime.split('.')[0]} hours ${overtime.split('.')[1]} minutes`;
-            const formatHoursWorked = `${hoursWorked.split('.')[0]} hours ${hoursWorked.split('.')[1]} minutes`;
-            const formatUndertime = `${undertime.split('.')[0]} hours ${undertime.split('.')[1]} minutes`;
 
             const formattedTimeInOutDate = format(new Date(timeInOutDate), 'dd/MM/yyyy');
             const formattedTimeIn = format(new Date(timeIn), 'hh:mm a');
@@ -52,10 +57,10 @@ const DTRTable: React.FC<DTRTableProps> = ({ dtrList }) => {
                 <TableCell className="font-medium whitespace-nowrap">{formattedTimeInOutDate}</TableCell>
                 <TableCell className="font-medium whitespace-nowrap">{formattedTimeIn}</TableCell>
                 <TableCell className="font-medium whitespace-nowrap">{formattedTimeOut}</TableCell>
-                <TableCell className="font-medium whitespace-nowrap">{formatHoursWorked}</TableCell>
-                <TableCell className="font-medium whitespace-nowrap">{formatOvertime}</TableCell>
-                <TableCell className="font-medium whitespace-nowrap">{formatUndertime}</TableCell>
-                <TableCell className="flex gap-2">
+                <TableCell className="font-medium whitespace-nowrap text-center">{hoursWorked}</TableCell>
+                <TableCell className="font-medium whitespace-nowrap text-center">{overtime}</TableCell>
+                <TableCell className="font-medium whitespace-nowrap text-center">{undertime}</TableCell>
+                <TableCell className="flex gap-2  justify-center">
                   <DeleteDTR id={id as string} />
                   <Button variant="default"><Pencil /></Button>
                 </TableCell>
@@ -65,8 +70,10 @@ const DTRTable: React.FC<DTRTableProps> = ({ dtrList }) => {
         </TableBody>
         <TableFooter>
           <TableRow>
-            <TableCell colSpan={6} className="font-medium">Total</TableCell>
-            <TableCell className="font-medium whitespace-nowrap">{totalHours}</TableCell>
+            <TableCell colSpan={3} className="font-medium">Total</TableCell>
+            <TableCell className="font-medium whitespace-nowrap">{formattedTimeForHoursWorked}</TableCell>
+            <TableCell className="font-medium whitespace-nowrap">{formattedTimeForOvertime}</TableCell>
+            <TableCell colSpan={2} className="font-medium whitespace-normal">{formattedTimeForUndertime}</TableCell>
           </TableRow>
         </TableFooter>
       </Table>
