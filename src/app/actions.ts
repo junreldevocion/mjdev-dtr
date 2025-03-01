@@ -2,17 +2,16 @@
 
 
 
+import { HOURS_WORKED } from "@/constant";
 import { connectToMongoDB } from "@/lib/mongodb";
 import dtrModel from "@/model/dtrModel";
-import { format } from "date-fns";
+import { format, intervalToDuration } from "date-fns";
 import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
 
-const computedFormData = (formData: FormData) => {
-  const timeInOutDate = formData.get("timeInOutDate");
-  const formattedTimeInOutDate = new Date(timeInOutDate as unknown as string)
+const computedFormData = (timeInOutDate: string, timeIn: string, timeOut: string) => {
 
-  const timeIn = formData.get("timeIn");
-  const timeOut = formData.get("timeOut");
+  const formattedTimeInOutDate = new Date(timeInOutDate)
 
   const formatDateTimeIn = format(formattedTimeInOutDate, 'yyyy/MM/dd');
   const formatDateTimeOut = format(formattedTimeInOutDate, 'yyyy/MM/dd');
@@ -20,56 +19,70 @@ const computedFormData = (formData: FormData) => {
   const timeInDate = new Date(`${formatDateTimeIn} ${timeIn}`)
   const timeOutDate = new Date(`${formatDateTimeOut} ${timeOut}`)
 
-  const totalHours = timeOutDate.getHours() - timeInDate.getHours();
-  const totalMinutes = timeOutDate.getMinutes() - timeInDate.getMinutes();
+  const { hours, minutes } = intervalToDuration({ start: timeInDate, end: timeOutDate })
 
-  const totalHoursAndMinutes = totalHours + totalMinutes / 60
+  console.log(intervalToDuration({ start: timeInDate, end: timeOutDate }), 'intervalToDuration')
 
-  const hoursWorked = (totalHoursAndMinutes).toFixed(2);
+  const nullishHours = hours ?? 0;
+  const nullishMinutes = minutes ?? 0;
 
-  const totalOvertime = totalHoursAndMinutes - 8;
-  const overtime = (totalOvertime > 0 ? totalOvertime : 0).toFixed(2);
-  const undertime = (Math.abs(totalOvertime < 0 ? totalOvertime : 0)).toFixed(2);
+  const overtimeInHour = nullishHours > HOURS_WORKED ? nullishHours - HOURS_WORKED : 0;
+  const overtimeInMinutes = (nullishHours === HOURS_WORKED || nullishHours > HOURS_WORKED) ? nullishMinutes : 0;
 
-  console.log(formattedTimeInOutDate, 'formattedTimeInOutDate')
+  let undertimeInHour = (nullishHours) < HOURS_WORKED ? HOURS_WORKED - (nullishHours) : 0;
+  if (nullishMinutes > 0) {
+    undertimeInHour = (nullishHours + 1) < HOURS_WORKED ? HOURS_WORKED - (nullishHours + 1) : 0;
+  }
+  const undertimeInMinutes = (nullishHours) < HOURS_WORKED ? 60 - nullishMinutes : 0;
+
+  const overtime = `${overtimeInHour}.${overtimeInMinutes}`
+  const undertime = `${undertimeInHour}.${undertimeInMinutes}`
+
+  const hoursWorked = `${hours}.${minutes}`;
 
   return {
     timeInOutDate: formattedTimeInOutDate,
     timeIn: timeInDate,
     timeOut: timeOutDate,
-    hoursWorked,
-    overtime,
-    undertime
+    hoursWorked: parseFloat(hoursWorked),
+    overtime: parseFloat(overtime),
+    undertime: parseFloat(undertime),
   };
 }
 
 export const createDTR = async (formData: FormData) => {
   connectToMongoDB()
-  const data = computedFormData(formData)
 
-  try {
+  const timeInOutDate = formData.get("timeInOutDate");
+  const timeIn = formData.get("timeIn");
+  const timeOut = formData.get("timeOut");
 
-    const newDTR = await dtrModel.create(data);
-    // Saving the new dtr to the database
-    newDTR.save();
-    // Triggering revalidation of the specified path ("/")
-    revalidatePath("/");
-  } catch (error) {
-    console.log(error);
+  const data = computedFormData(timeInOutDate as unknown as string, timeIn as unknown as string, timeOut as unknown as string);
+
+  // Validate the input
+  if (!timeInOutDate || !timeIn || !timeOut) {
+    throw new Error('Missing timeInOutDate, timeIn, or timeOut');
   }
+
+  const newDTR = await dtrModel.create(data);
+  // // Saving the new dtr to the database
+  await newDTR.save();
+  // Triggering revalidation of the specified path ("/")
+  revalidatePath("/");
+  redirect('/')
 };
 
 export const deleteDTR = async (formData: FormData) => {
   connectToMongoDB();
   const id = formData.get('id')
 
-  try {
-    await dtrModel.deleteOne({ _id: id });
-
-    revalidatePath("/");
-  } catch (error) {
-    throw new Error(`error: ${error}`);
+  if (!id) {
+    throw new Error('Missing id');
   }
+
+  await dtrModel.deleteOne({ _id: id });
+
+  revalidatePath("/");
 
 
 }

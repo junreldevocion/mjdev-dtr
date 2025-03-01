@@ -18,10 +18,9 @@ import { Input } from "@/components/ui/input"
 import { Calendar } from "./ui/calendar"
 import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover"
 import { cn } from "@/lib/utils"
-import { CalendarIcon } from "lucide-react"
+import { CalendarIcon, Save } from "lucide-react"
 import { addHours, format } from "date-fns"
 import { createDTR } from "@/app/actions"
-import { DialogTrigger } from "./ui/dialog"
 
 const FormSchema = z.object({
   timeInOutDate: z.date(),
@@ -115,7 +114,6 @@ export function DtrForm() {
             control={form.control}
             name="timeOut"
             render={({ field }) => {
-              console.log(field, 'field')
               return <FormItem className="flex flex-col w-full">
                 <FormLabel>Time out</FormLabel>
                 <Input type="time" {...field} onChange={field.onChange} />
@@ -129,9 +127,7 @@ export function DtrForm() {
           />
         </div>
         <div>
-          <DialogTrigger asChild >
-            <Button type="submit">Submit</Button>
-          </DialogTrigger>
+          <Button type="submit">Submit <Save /></Button>
         </div>
       </form>
     </Form >

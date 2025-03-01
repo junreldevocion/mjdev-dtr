@@ -2,8 +2,9 @@
 
 import { deleteDTR } from "@/app/actions"
 import { Button } from "./ui/button"
+import { Trash2 } from "lucide-react"
 
-const DeleteDTR = async ({ id }: { id: string }) => {
+const DeleteDTR = ({ id }: { id: string }) => {
   return (
     <form action={deleteDTR}>
       <input
@@ -12,7 +13,7 @@ const DeleteDTR = async ({ id }: { id: string }) => {
         name="id"
         defaultValue={id.toString()}
       />
-      <Button className="sm">Delete</Button>
+      <Button className="sm" variant="destructive"><Trash2 /></Button>
     </form>
   )
 }
