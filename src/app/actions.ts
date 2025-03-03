@@ -1,54 +1,11 @@
 'use server';
 
-
-
-import { HOURS_WORKED } from "@/constant";
 import { connectToMongoDB } from "@/lib/mongodb";
 import dtrModel from "@/model/dtrModel";
-import { format, intervalToDuration } from "date-fns";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
+import { computedFormData } from "./actions.service";
 
-const computedFormData = (timeInOutDate: string, timeIn: string, timeOut: string) => {
-
-  const formattedTimeInOutDate = new Date(timeInOutDate)
-
-  const formatDateTimeIn = format(formattedTimeInOutDate, 'yyyy/MM/dd');
-  const formatDateTimeOut = format(formattedTimeInOutDate, 'yyyy/MM/dd');
-
-  const timeInDate = new Date(`${formatDateTimeIn} ${timeIn}`)
-  const timeOutDate = new Date(`${formatDateTimeOut} ${timeOut}`)
-
-  const { hours, minutes } = intervalToDuration({ start: timeInDate, end: timeOutDate })
-
-  console.log(intervalToDuration({ start: timeInDate, end: timeOutDate }), 'intervalToDuration')
-
-  const nullishHours = hours ?? 0;
-  const nullishMinutes = minutes ?? 0;
-
-  const overtimeInHour = nullishHours > HOURS_WORKED ? nullishHours - HOURS_WORKED : 0;
-  const overtimeInMinutes = (nullishHours === HOURS_WORKED || nullishHours > HOURS_WORKED) ? nullishMinutes : 0;
-
-  let undertimeInHour = (nullishHours) < HOURS_WORKED ? HOURS_WORKED - (nullishHours) : 0;
-  if (nullishMinutes > 0) {
-    undertimeInHour = (nullishHours + 1) < HOURS_WORKED ? HOURS_WORKED - (nullishHours + 1) : 0;
-  }
-  const undertimeInMinutes = (nullishHours) < HOURS_WORKED ? 60 - nullishMinutes : 0;
-
-  const overtime = `${overtimeInHour}.${overtimeInMinutes}`
-  const undertime = `${undertimeInHour}.${undertimeInMinutes}`
-
-  const hoursWorked = `${hours}.${minutes}`;
-
-  return {
-    timeInOutDate: formattedTimeInOutDate,
-    timeIn: timeInDate,
-    timeOut: timeOutDate,
-    hoursWorked: parseFloat(hoursWorked),
-    overtime: parseFloat(overtime),
-    undertime: parseFloat(undertime),
-  };
-}
 
 export const createDTR = async (formData: FormData) => {
   connectToMongoDB()
@@ -72,6 +29,11 @@ export const createDTR = async (formData: FormData) => {
   redirect('/')
 };
 
+export const updateDTR = async (formData: FormData) => {
+  const timeInOutDate = formData.get("timeInOutDate");
+  console.log(timeInOutDate, 'timeInOutDate')
+}
+
 export const deleteDTR = async (formData: FormData) => {
   connectToMongoDB();
   const id = formData.get('id')
@@ -83,6 +45,5 @@ export const deleteDTR = async (formData: FormData) => {
   await dtrModel.deleteOne({ _id: id });
 
   revalidatePath("/");
-
 
 }
