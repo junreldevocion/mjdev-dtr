@@ -7,6 +7,7 @@ import { format } from "date-fns";
 import { Button } from "./ui/button";
 import { Pencil } from "lucide-react";
 import { calculateExactTime, formatTime } from "@/lib/utils";
+import Link from "next/link";
 
 
 interface DTRTableProps {
@@ -62,7 +63,7 @@ const DTRTable: React.FC<DTRTableProps> = ({ dtrList }) => {
                 <TableCell className="font-medium whitespace-nowrap text-center">{undertime}</TableCell>
                 <TableCell className="flex gap-2  justify-center">
                   <DeleteDTR id={id as string} />
-                  <Button variant="default"><Pencil /></Button>
+                  <Link href={`/${id}`}><Button variant="default"><Pencil /></Button></Link>
                 </TableCell>
               </TableRow>
             )
@@ -71,9 +72,10 @@ const DTRTable: React.FC<DTRTableProps> = ({ dtrList }) => {
         <TableFooter>
           <TableRow>
             <TableCell colSpan={3} className="font-medium">Total</TableCell>
-            <TableCell className="font-medium whitespace-nowrap">{formattedTimeForHoursWorked}</TableCell>
-            <TableCell className="font-medium whitespace-nowrap">{formattedTimeForOvertime}</TableCell>
-            <TableCell colSpan={2} className="font-medium whitespace-normal">{formattedTimeForUndertime}</TableCell>
+            <TableCell className="font-medium whitespace-nowrap text-center">{formattedTimeForHoursWorked}</TableCell>
+            <TableCell className="font-medium whitespace-nowrap text-center">{formattedTimeForOvertime}</TableCell>
+            <TableCell className="font-medium whitespace-nowrap text-center ">{formattedTimeForUndertime}</TableCell>
+            <TableCell className="font-medium whitespace-normal text-center"></TableCell>
           </TableRow>
         </TableFooter>
       </Table>

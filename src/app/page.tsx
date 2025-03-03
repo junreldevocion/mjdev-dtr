@@ -2,7 +2,6 @@
 
 
 import { Dialog } from "@/components/ui/dialog";
-import DialogForm from "@/components/DialogForm";
 import { Plus } from "lucide-react";
 import DTR, { IDTR } from "@/model/dtrModel";
 import { calculateExactTime, calculateTotalHours, formatTime } from "@/lib/utils";
@@ -35,7 +34,6 @@ export default async function Home() {
             <h4 className="text-sm font-medium text-gray-500 dark:text-gray-400">Remaining hours: {calculatedRemainingHours}</h4>
           </div>
           <Link href="/add" className=""><Button variant="outline">Add DTR<Plus /></Button></Link>
-          <DialogForm />
         </Dialog>
         <DTRTable dtrList={dtrList} />
         <Toaster position="top-right" />

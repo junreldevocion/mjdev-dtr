@@ -20,7 +20,6 @@ import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover"
 import { cn } from "@/lib/utils"
 import { CalendarIcon, Save } from "lucide-react"
 import { addHours, format } from "date-fns"
-import { createDTR } from "@/app/actions"
 
 const FormSchema = z.object({
   timeInOutDate: z.date(),
@@ -29,7 +28,11 @@ const FormSchema = z.object({
   overtime: z.string().optional(),
 })
 
-export function DtrForm() {
+interface DtrFormProps {
+  action: string | ((formData: FormData) => void | Promise<void>) | undefined;
+}
+
+export function DtrForm({ action }: DtrFormProps) {
   const currentDate = new Date()
   const timeIn = format(currentDate, 'HH:mm');
   const timeOutDateTime = addHours(currentDate, 8);
@@ -47,7 +50,7 @@ export function DtrForm() {
 
   return (
     <Form {...form}>
-      <form action={createDTR} className="w-full flex gap-4 flex-col">
+      <form action={action} className="w-full flex gap-4 flex-col">
         <FormField
           control={form.control}
           name="timeInOutDate"
