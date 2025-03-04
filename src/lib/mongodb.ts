@@ -21,6 +21,7 @@ export async function connectToMongoDB() {
     // Return the newly established connection
     return cachedConnection;
   } catch (error) {
+    console.log('shit naman')
     // If an error occurs during connection, log the error and throw it
     console.log(error);
     throw error;

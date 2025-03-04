@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import { connectToMongoDB } from "@/lib/mongodb";
 import Navbar from "@/components/Navbar";
+import { connectToMongoDB } from "@/lib/mongodb";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -24,7 +24,7 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  connectToMongoDB()
+  await connectToMongoDB()
   return (
     <html lang="en">
       <body

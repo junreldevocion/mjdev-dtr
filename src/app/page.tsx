@@ -3,13 +3,13 @@
 
 import { Dialog } from "@/components/ui/dialog";
 import { Plus } from "lucide-react";
-import DTR, { IDTR } from "@/model/dtrModel";
 import { calculateExactTime, calculateTotalHours, formatTime } from "@/lib/utils";
 import DTRTable from "@/components/DTRTable";
 import { Toaster } from "@/components/ui/sonner";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { OJT_HOURS } from "@/constant";
+import DTR, { IDTR } from "@/model/dtrModel";
 
 
 export default async function Home() {

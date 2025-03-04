@@ -10,7 +10,6 @@ export interface IDTR extends Document {
 }
 const options = { timestamps: true };
 
-
 const DTRSchema: Schema = new Schema<IDTR>({
   timeInOutDate: { type: Date, required: true },
   timeIn: { type: Date, required: true },
@@ -20,6 +19,6 @@ const DTRSchema: Schema = new Schema<IDTR>({
   undertime: { type: String, required: true },
 }, options);
 
-const DTR = mongoose.model<IDTR>('DTR', DTRSchema);
+const DTR =  mongoose.model<IDTR>('DTR', DTRSchema);
 
 export default DTR;

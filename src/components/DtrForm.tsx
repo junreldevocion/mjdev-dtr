@@ -17,9 +17,10 @@ import {
 import { Input } from "@/components/ui/input"
 import { Calendar } from "./ui/calendar"
 import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover"
-import { cn } from "@/lib/utils"
+import { cn, formatResponse } from "@/lib/utils"
 import { CalendarIcon, Save } from "lucide-react"
-import { addHours, format } from "date-fns"
+import { IDTR } from "@/model/dtrModel"
+import { format } from "date-fns"
 
 const FormSchema = z.object({
   timeInOutDate: z.date(),
@@ -30,21 +31,19 @@ const FormSchema = z.object({
 
 interface DtrFormProps {
   action: string | ((formData: FormData) => void | Promise<void>) | undefined;
+  data?: IDTR
 }
 
-export function DtrForm({ action }: DtrFormProps) {
-  const currentDate = new Date()
-  const timeIn = format(currentDate, 'HH:mm');
-  const timeOutDateTime = addHours(currentDate, 8);
-  const timeOut = format(timeOutDateTime, 'HH:mm');
+export function DtrForm({ action, data }: DtrFormProps) {
+
+  const {timeInOutDate, timeIn, timeOut } = formatResponse(data!)
 
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
-      timeInOutDate: currentDate,
-      timeIn: timeIn,
-      timeOut: timeOut,
-      overtime: '',
+      timeInOutDate:  timeInOutDate,
+      timeIn,
+      timeOut,
     },
   })
 
