@@ -53,15 +53,15 @@ export const calculateExactTime = (dtrList: IDTR[], key: keyof IDTR) => {
 
 export const formatResponse = (data: IDTR) => {
 
-  if(!data) {
+  if (!data) {
     return {
       timeIn: '',
       timeOut: '',
       timeInOutDate: new Date()
     }
   }
-  
-  const {timeIn, timeInOutDate, timeOut} = data
+
+  const { timeIn, timeInOutDate, timeOut } = data
 
   const timeInTemp = new Date(timeIn);
   const timeOutTemp = new Date(timeOut);
@@ -81,15 +81,16 @@ export const formatResponse = (data: IDTR) => {
 }
 
 export const totalRendredTime = (dtrList: IDTR[]) => {
-  const {hours: hoursWorked, minutes: minutesWorked} = calculateExactTime(dtrList, 'hoursWorked');
-  const {hours: overtimeHours, minutes: overtimeMinutes} = calculateExactTime(dtrList, 'overtime');
+  const { hours: hoursWorked, minutes: minutesWorked } = calculateExactTime(dtrList, 'hoursWorked');
+  const { hours: overtimeHours, minutes: overtimeMinutes } = calculateExactTime(dtrList, 'overtime');
+  const { hours: doubleTimeHours, minutes: doubleTimeMinutes } = calculateExactTime(dtrList, 'doubleTime');
 
-  let totalHoursRendered = hoursWorked + overtimeHours;
-  let totalMinutesRendred = minutesWorked + overtimeMinutes;
+  let totalHoursRendered = hoursWorked + overtimeHours + doubleTimeHours;
+  let totalMinutesRendred = minutesWorked + overtimeMinutes + doubleTimeMinutes;
 
-  if(totalMinutesRendred > MINUTES_WORKED) {
+  if (totalMinutesRendred > MINUTES_WORKED) {
 
-    const calcutedMinutes =  totalMinutesRendred % MINUTES_WORKED;
+    const calcutedMinutes = totalMinutesRendred % MINUTES_WORKED;
     const calculatedHours = Math.floor(totalMinutesRendred / MINUTES_WORKED)
 
     totalMinutesRendred = calcutedMinutes

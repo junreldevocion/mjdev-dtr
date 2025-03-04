@@ -1,8 +1,8 @@
-import { HOURS_WORKED } from "@/constant";
+import { HOURS_WORKED, MINUTES_WORKED } from "@/constant";
 import { intervalToDuration } from "date-fns";
 import { format } from "date-fns";
 
-export const computedFormData = (timeInOutDate: string, timeIn: string, timeOut: string) => {
+export const computedFormData = (timeInOutDate: string, timeIn: string, timeOut: string, isDoubleTime: boolean) => {
 
   const formattedTimeInOutDate = new Date(timeInOutDate)
 
@@ -31,6 +31,22 @@ export const computedFormData = (timeInOutDate: string, timeIn: string, timeOut:
 
   const hoursWorked = `${hours}.${minutes}`;
 
+  let doubleTimeHours = ((hours ?? 0) + overtimeInHour) * 2;
+  let doubleTimeMinutes = ((minutes ?? 0) + overtimeInMinutes) * 2;
+
+  if (doubleTimeMinutes > MINUTES_WORKED) {
+    const calculatedHours = Math.floor(doubleTimeMinutes / 60);
+    const calculatedMinutes = doubleTimeMinutes % MINUTES_WORKED
+    doubleTimeHours += calculatedHours;
+    doubleTimeMinutes = calculatedMinutes
+  }
+
+  let doubleTime = `${doubleTimeHours}.${doubleTimeMinutes}`
+
+  if (!isDoubleTime) {
+    doubleTime = `0`
+  }
+
   return {
     timeInOutDate: formattedTimeInOutDate,
     timeIn: timeInDate,
@@ -38,5 +54,6 @@ export const computedFormData = (timeInOutDate: string, timeIn: string, timeOut:
     hoursWorked: parseFloat(hoursWorked),
     overtime: parseFloat(overtime),
     undertime: parseFloat(undertime),
+    doubleTime
   };
 }
