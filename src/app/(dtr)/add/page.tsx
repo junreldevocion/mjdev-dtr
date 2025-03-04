@@ -11,7 +11,7 @@ export default async function AddDTR() {
         <Link href="/"><Button variant="link" className="text-left"><ArrowLeft /> Back</Button></Link>
         <h1 className="text-2xl font-semibold">Add Daily Time Record</h1>
         <h4 className="font-medium tracking-tight text-sm float-left xl:float-end">Fill up the form below</h4>
-        <DtrForm action={createDTR} />
+        <DtrForm action={createDTR}  />
       </div>
     </>
   );

@@ -10,7 +10,6 @@ export interface IDTR extends Document {
 }
 const options = { timestamps: true };
 
-
 const DTRSchema: Schema = new Schema<IDTR>({
   timeInOutDate: { type: Date, required: true },
   timeIn: { type: Date, required: true },
