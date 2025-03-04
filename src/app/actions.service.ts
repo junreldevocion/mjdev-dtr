@@ -31,8 +31,8 @@ export const computedFormData = (timeInOutDate: string, timeIn: string, timeOut:
 
   const hoursWorked = `${hours}.${minutes}`;
 
-  let doubleTimeHours = ((hours ?? 0) + overtimeInHour) * 2;
-  let doubleTimeMinutes = ((minutes ?? 0) + overtimeInMinutes) * 2;
+  let doubleTimeHours = (hours ?? 0) * 2;
+  let doubleTimeMinutes = (minutes ?? 0) * 2;
 
   if (doubleTimeMinutes > MINUTES_WORKED) {
     const calculatedHours = Math.floor(doubleTimeMinutes / 60);
