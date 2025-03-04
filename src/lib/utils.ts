@@ -3,6 +3,7 @@ import { clsx, type ClassValue } from "clsx"
 import { twMerge } from "tailwind-merge"
 import { getTotalHours, getTotaMinutes } from "./utils.service";
 import { format } from "date-fns";
+import { MINUTES_WORKED } from "@/constant";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
@@ -77,4 +78,27 @@ export const formatResponse = (data: IDTR) => {
   }
 
   return formattedData;
+}
+
+export const totalRendredTime = (dtrList: IDTR[]) => {
+  const {hours: hoursWorked, minutes: minutesWorked} = calculateExactTime(dtrList, 'hoursWorked');
+  const {hours: overtimeHours, minutes: overtimeMinutes} = calculateExactTime(dtrList, 'overtime');
+
+  let totalHoursRendered = hoursWorked + overtimeHours;
+  let totalMinutesRendred = minutesWorked + overtimeMinutes;
+
+  if(totalMinutesRendred > MINUTES_WORKED) {
+
+    const calcutedMinutes =  totalMinutesRendred % MINUTES_WORKED;
+    const calculatedHours = Math.floor(totalMinutesRendred / MINUTES_WORKED)
+
+    totalMinutesRendred = calcutedMinutes
+    totalHoursRendered += calculatedHours
+  }
+
+
+  return {
+    hours: totalHoursRendered,
+    minutes: totalMinutesRendred
+  }
 }
