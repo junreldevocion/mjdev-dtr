@@ -26,7 +26,7 @@ const FormSchema = z.object({
   timeInOutDate: z.date(),
   timeIn: z.string().min(0, { message: 'Time in should be greater than 00:00' }),
   timeOut: z.string().min(0, { message: 'Time out should be greater than 00:00' }),
-  overtime: z.string().optional(),
+  id: z.string().optional()
 })
 
 interface DtrFormProps {
@@ -44,6 +44,7 @@ export function DtrForm({ action, data }: DtrFormProps) {
       timeInOutDate:  timeInOutDate,
       timeIn,
       timeOut,
+      id: (data?._id as string) ?? ''
     },
   })
 
@@ -127,6 +128,7 @@ export function DtrForm({ action, data }: DtrFormProps) {
 
             }}
           />
+          <input type="hidden" {...form.register('id')} />
         </div>
         <div>
           <Button type="submit">Submit <Save /></Button>

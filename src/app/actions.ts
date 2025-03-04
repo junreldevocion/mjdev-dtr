@@ -22,7 +22,7 @@ export const createDTR = async (formData: FormData) => {
   }
 
   const newDTR = await DTRModel.create(data);
-  // // Saving the new dtr to the database
+  //  Saving the new dtr to the database
   await newDTR.save();
   // Triggering revalidation of the specified path ("/")
   revalidatePath("/");
@@ -32,7 +32,25 @@ export const createDTR = async (formData: FormData) => {
 export const updateDTR = async (formData: FormData) => {
   await connectToMongoDB();
   const timeInOutDate = formData.get("timeInOutDate");
-  console.log(timeInOutDate, 'timeInOutDate')
+  const timeIn = formData.get("timeIn");
+  const timeOut = formData.get("timeOut");
+  const id = formData.get('id');
+
+  const data = computedFormData(timeInOutDate as unknown as string, timeIn as unknown as string, timeOut as unknown as string);
+
+  // Validate the input
+  if (!timeInOutDate || !timeIn || !timeOut) {
+    throw new Error('Missing timeInOutDate, timeIn, or timeOut');
+  }
+
+   await DTRModel.findByIdAndUpdate(id, data, {
+    new: true,
+    runValidators: true,
+  });
+
+  revalidatePath("/");
+  redirect('/')
+
 }
 
 export const deleteDTR = async (formData: FormData) => {
