@@ -21,12 +21,15 @@ import { cn, formatResponse } from "@/lib/utils"
 import { CalendarIcon, Save } from "lucide-react"
 import { IDTR } from "@/model/dtrModel"
 import { format } from "date-fns"
+import { Checkbox } from "./ui/checkbox"
+import { CheckboxProps } from "@radix-ui/react-checkbox"
 
 const FormSchema = z.object({
   timeInOutDate: z.date(),
   timeIn: z.string().min(0, { message: 'Time in should be greater than 00:00' }),
   timeOut: z.string().min(0, { message: 'Time out should be greater than 00:00' }),
-  id: z.string().optional()
+  id: z.string().optional(),
+  isDoubleTime: z.boolean().optional()
 })
 
 interface DtrFormProps {
@@ -36,15 +39,16 @@ interface DtrFormProps {
 
 export function DtrForm({ action, data }: DtrFormProps) {
 
-  const {timeInOutDate, timeIn, timeOut } = formatResponse(data!)
+  const { timeInOutDate, timeIn, timeOut } = formatResponse(data!)
 
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
-      timeInOutDate:  timeInOutDate,
+      timeInOutDate: timeInOutDate,
       timeIn,
       timeOut,
-      id: (data?._id as string) ?? ''
+      id: (data?._id as string) ?? '',
+      isDoubleTime: false
     },
   })
 
@@ -129,6 +133,20 @@ export function DtrForm({ action, data }: DtrFormProps) {
             }}
           />
           <input type="hidden" {...form.register('id')} />
+        </div>
+        <div className="items-top flex space-x-2">
+          <FormField
+            control={form.control}
+            name="isDoubleTime"
+            render={({ field }) => {
+              console.log(field, 'field')
+              return <FormItem className="flex flex-row w-full">
+                <Checkbox {...field as unknown as CheckboxProps} checked={field.value} onCheckedChange={field.onChange} />
+                <FormLabel>Is double time?</FormLabel>
+                <FormMessage />
+              </FormItem>
+            }}
+          />
         </div>
         <div>
           <Button type="submit">Submit <Save /></Button>

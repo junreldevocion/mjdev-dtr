@@ -7,6 +7,7 @@ export interface IDTR extends Document {
   hoursWorked: string;
   overtime: string;
   undertime: string;
+  doubleTime: string;
 }
 const options = { timestamps: true };
 
@@ -17,6 +18,7 @@ const DTRSchema: Schema = new Schema<IDTR>({
   hoursWorked: { type: String, required: true },
   overtime: { type: String, required: true },
   undertime: { type: String, required: true },
+  doubleTime: { type: String, required: true },
 }, options);
 
 const DTR = mongoose.model<IDTR>('DTR', DTRSchema);

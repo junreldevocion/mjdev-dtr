@@ -13,8 +13,9 @@ export const createDTR = async (formData: FormData) => {
   const timeInOutDate = formData.get("timeInOutDate");
   const timeIn = formData.get("timeIn");
   const timeOut = formData.get("timeOut");
+  const isDoubleTime = formData.get("isDoubleTime");
 
-  const data = computedFormData(timeInOutDate as unknown as string, timeIn as unknown as string, timeOut as unknown as string);
+  const data = computedFormData(timeInOutDate as unknown as string, timeIn as unknown as string, timeOut as unknown as string, isDoubleTime as unknown as boolean);
 
   // Validate the input
   if (!timeInOutDate || !timeIn || !timeOut) {
@@ -24,7 +25,7 @@ export const createDTR = async (formData: FormData) => {
   const newDTR = await DTRModel.create(data);
   //  Saving the new dtr to the database
   await newDTR.save();
-  // Triggering revalidation of the specified path ("/")
+  // Triggering revalidation of the specified path("/")
   revalidatePath("/");
   redirect('/')
 };
@@ -35,15 +36,16 @@ export const updateDTR = async (formData: FormData) => {
   const timeIn = formData.get("timeIn");
   const timeOut = formData.get("timeOut");
   const id = formData.get('id');
+  const isDoubleTime = formData.get("isDoubleTime");
 
-  const data = computedFormData(timeInOutDate as unknown as string, timeIn as unknown as string, timeOut as unknown as string);
+  const data = computedFormData(timeInOutDate as unknown as string, timeIn as unknown as string, timeOut as unknown as string, isDoubleTime as unknown as boolean);
 
   // Validate the input
   if (!timeInOutDate || !timeIn || !timeOut) {
     throw new Error('Missing timeInOutDate, timeIn, or timeOut');
   }
 
-   await DTRModel.findByIdAndUpdate(id, data, {
+  await DTRModel.findByIdAndUpdate(id, data, {
     new: true,
     runValidators: true,
   });
