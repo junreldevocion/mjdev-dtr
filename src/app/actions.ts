@@ -1,15 +1,13 @@
 'use server';
 
-import { connectToMongoDB } from "@/lib/mongodb";
+
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { computedFormData } from "./actions.service";
-import DTRModel from "@/model/dtrModel";
+import DTR from "@/model/dtr.model";
 
 
 export const createDTR = async (formData: FormData) => {
-  await connectToMongoDB()
-
   const timeInOutDate = formData.get("timeInOutDate");
   const timeIn = formData.get("timeIn");
   const timeOut = formData.get("timeOut");
@@ -22,7 +20,7 @@ export const createDTR = async (formData: FormData) => {
     throw new Error('Missing timeInOutDate, timeIn, or timeOut');
   }
 
-  const newDTR = await DTRModel.create(data);
+  const newDTR = await DTR.create(data);
   //  Saving the new dtr to the database
   await newDTR.save();
   // Triggering revalidation of the specified path("/")
@@ -31,7 +29,6 @@ export const createDTR = async (formData: FormData) => {
 };
 
 export const updateDTR = async (formData: FormData) => {
-  await connectToMongoDB();
   const timeInOutDate = formData.get("timeInOutDate");
   const timeIn = formData.get("timeIn");
   const timeOut = formData.get("timeOut");
@@ -45,7 +42,7 @@ export const updateDTR = async (formData: FormData) => {
     throw new Error('Missing timeInOutDate, timeIn, or timeOut');
   }
 
-  await DTRModel.findByIdAndUpdate(id, data, {
+  await DTR.findByIdAndUpdate(id, data, {
     new: true,
     runValidators: true,
   });
@@ -56,15 +53,12 @@ export const updateDTR = async (formData: FormData) => {
 }
 
 export const deleteDTR = async (formData: FormData) => {
-  await connectToMongoDB();
   const id = formData.get('id')
 
   if (!id) {
     throw new Error('Missing id');
   }
-
-  await DTRModel.deleteOne({ _id: id });
-
-  revalidatePath("/");
+  await DTR.deleteOne({ _id: id });
+  revalidatePath("/");  
 
 }

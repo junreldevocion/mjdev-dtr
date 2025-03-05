@@ -1,9 +1,10 @@
-import { IDTR } from "@/model/dtrModel";
+
 import { clsx, type ClassValue } from "clsx"
 import { twMerge } from "tailwind-merge"
 import { getTotalHours, getTotaMinutes } from "./utils.service";
 import { format } from "date-fns";
 import { MINUTES_WORKED } from "@/constant";
+import { IDTR } from "@/model/dtr.model";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
@@ -20,7 +21,7 @@ export const formatTime = (hours: string, minutes: string) => {
   const hoursString = hours.padStart(2, '0');
   const minutesString = minutes.padStart(2, '0');
 
-  return `Hours ${hoursString} Minutes ${minutesString}`;
+  return `${hoursString}:${minutesString}`;
 }
 
 /**
