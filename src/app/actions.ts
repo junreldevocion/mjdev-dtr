@@ -1,6 +1,6 @@
 'use server';
 
-
+import { connectToMongoDB } from "@/lib/mongodb";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { computedFormData } from "./actions.service";
@@ -8,6 +8,8 @@ import DTR from "@/model/dtr.model";
 
 
 export const createDTR = async (formData: FormData) => {
+  await connectToMongoDB()
+
   const timeInOutDate = formData.get("timeInOutDate");
   const timeIn = formData.get("timeIn");
   const timeOut = formData.get("timeOut");
@@ -29,6 +31,7 @@ export const createDTR = async (formData: FormData) => {
 };
 
 export const updateDTR = async (formData: FormData) => {
+  await connectToMongoDB();
   const timeInOutDate = formData.get("timeInOutDate");
   const timeIn = formData.get("timeIn");
   const timeOut = formData.get("timeOut");
@@ -53,12 +56,15 @@ export const updateDTR = async (formData: FormData) => {
 }
 
 export const deleteDTR = async (formData: FormData) => {
+  await connectToMongoDB();
   const id = formData.get('id')
 
   if (!id) {
     throw new Error('Missing id');
   }
+
   await DTR.deleteOne({ _id: id });
+
   revalidatePath("/");  
 
 }
