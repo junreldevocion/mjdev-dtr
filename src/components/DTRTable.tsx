@@ -77,9 +77,9 @@ const DTRTable: React.FC<DTRTableProps> = ({ dtrList }) => {
         <TableFooter>
           <TableRow>
             <TableCell colSpan={3} className="font-medium">Total</TableCell>
-            <TableCell className="font-medium whitespace-nowrap text-center">{formattedTimeForHoursWorked}</TableCell>
             <TableCell className="font-medium whitespace-nowrap text-center">{formattedTimeForOvertime}</TableCell>
             <TableCell className="font-medium whitespace-nowrap text-center ">{formattedTimeForDoubleTime}</TableCell>
+            <TableCell className="font-medium whitespace-nowrap text-center">{formattedTimeForHoursWorked}</TableCell>
             <TableCell className="font-medium whitespace-nowrap text-center ">{formattedTimeForUndertime}</TableCell>
             <TableCell className="font-medium whitespace-normal text-center"></TableCell>
           </TableRow>
