@@ -29,7 +29,7 @@ export const computedFormData = (timeInOutDate: string, timeIn: string, timeOut:
   const overtime = `${overtimeInHour}.${overtimeInMinutes}`
   const undertime = `${undertimeInHour}.${undertimeInMinutes}`
 
-  const hoursWorked = `${hours}.${minutes}`;
+
 
   let doubleTimeHours = (hours ?? 0) * 2;
   let doubleTimeMinutes = (minutes ?? 0) * 2;
@@ -41,11 +41,16 @@ export const computedFormData = (timeInOutDate: string, timeIn: string, timeOut:
     doubleTimeMinutes = calculatedMinutes
   }
 
-  let doubleTime = `${doubleTimeHours}.${doubleTimeMinutes}`
+  let doubleTime = `0`
 
-  if (!isDoubleTime) {
-    doubleTime = `0`
+  let hoursWorked = `${hours}.${minutes}`;
+
+  if (isDoubleTime) {
+    doubleTime = `${doubleTimeHours}.${doubleTimeMinutes}`
+    hoursWorked = doubleTime
   }
+
+
 
   return {
     timeInOutDate: formattedTimeInOutDate,

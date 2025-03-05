@@ -3,7 +3,7 @@
 
 import { Dialog } from "@/components/ui/dialog";
 import { Plus } from "lucide-react";
-import { calculateTotalHours, formatTime, totalRendredTime } from "@/lib/utils";
+import { calculateTotalHours, formatTime, totalRenderedTime } from "@/lib/utils";
 import DTRTable from "@/components/DTRTable";
 import { Toaster } from "@/components/ui/sonner";
 import Link from "next/link";
@@ -19,7 +19,7 @@ export default async function Home() {
   const totalHours = calculateTotalHours(dtrList);
   const calculatedRemainingHours = OJT_HOURS - totalHours;
 
-  const {hours, minutes} = totalRendredTime(dtrList)
+  const { hours, minutes } = totalRenderedTime(dtrList)
 
   const formattedTime = formatTime(hours.toString(), minutes.toString());
 
@@ -27,11 +27,11 @@ export default async function Home() {
     <>
       <div className="max-w-screen-xl m-auto pt-20 p-4 pb-8">
         <Dialog>
-          <div className="flex justify-between items-center pb-4 flex-wrap gap-4">
+          <div className="flex justify-between pb-4 flex-col md:flex-row gap-4">
             <h1 className="text-2xl font-semibold">Daily Time Record</h1>
-            <h4 className="text-sm font-medium text-gray-500 dark:text-gray-400">Total hours need to render: {OJT_HOURS}</h4>
-            <h4 className="text-sm font-medium text-gray-500 dark:text-gray-400">Total hours rendered: {formattedTime}</h4>
-            <h4 className="text-sm font-medium text-gray-500 dark:text-gray-400">Remaining hours: {calculatedRemainingHours}</h4>
+            <h4 className="text-sm font-medium text-gray-500 dark:text-gray-400">Total hours need to render: <span className="font-medium text-gray-700">{OJT_HOURS}</span></h4>
+            <h4 className="text-sm font-medium text-gray-500 dark:text-gray-400">Total hours rendered: <span className="font-medium text-gray-700">{formattedTime}</span></h4>
+            <h4 className="text-sm font-medium text-gray-500 dark:text-gray-400">Remaining hours: <span className="font-medium text-gray-700">{calculatedRemainingHours}</span></h4>
           </div>
           <Link href="/add" className=""><Button variant="outline">Add DTR<Plus /></Button></Link>
         </Dialog>

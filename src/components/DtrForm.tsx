@@ -124,9 +124,6 @@ export function DtrForm({ action, data }: DtrFormProps) {
               return <FormItem className="flex flex-col w-full">
                 <FormLabel>Time in</FormLabel>
                 <Input type="time" {...field} onChange={field.onChange} className="w-full" />
-                <FormDescription>
-                  Default current time
-                </FormDescription>
                 <FormMessage />
               </FormItem>
             }}
@@ -138,9 +135,6 @@ export function DtrForm({ action, data }: DtrFormProps) {
               return <FormItem className="flex flex-col w-full">
                 <FormLabel>Time out</FormLabel>
                 <Input type="time" {...field} onChange={field.onChange} />
-                <FormDescription>
-                  Default time + 8 hours
-                </FormDescription>
                 <FormMessage />
               </FormItem>
 
