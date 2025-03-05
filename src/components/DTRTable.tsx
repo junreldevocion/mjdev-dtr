@@ -1,6 +1,5 @@
 
 
-import { IDTR } from "@/model/dtrModel";
 import { TableCaption, TableHeader, TableRow, TableHead, TableBody, TableCell, Table, TableFooter } from "./ui/table";
 import DeleteDTR from "./DeleteDTR";
 import { format } from "date-fns";
@@ -8,6 +7,7 @@ import { Button } from "./ui/button";
 import { Pencil } from "lucide-react";
 import { calculateExactTime, formatTime } from "@/lib/utils";
 import Link from "next/link";
+import { IDTR } from "@/model/dtr.model";
 
 
 interface DTRTableProps {
@@ -38,9 +38,9 @@ const DTRTable: React.FC<DTRTableProps> = ({ dtrList }) => {
             <TableHead className="whitespace-nowrap">Date</TableHead>
             <TableHead className="whitespace-nowrap">Time in</TableHead>
             <TableHead className="whitespace-nowrap">Time out</TableHead>
-            <TableHead className="whitespace-nowrap text-center">Hours worked</TableHead>
             <TableHead className="whitespace-nowrap text-center">Overtime</TableHead>
             <TableHead className="whitespace-nowrap text-center">Double time</TableHead>
+            <TableHead className="whitespace-nowrap text-center">Hours worked</TableHead>
             <TableHead className="whitespace-nowrap text-center">Undertime</TableHead>
             <TableHead className="text-center">Action</TableHead>
           </TableRow>
@@ -62,9 +62,9 @@ const DTRTable: React.FC<DTRTableProps> = ({ dtrList }) => {
                 <TableCell className="font-medium whitespace-nowrap">{formattedTimeInOutDate}</TableCell>
                 <TableCell className="font-medium whitespace-nowrap">{formattedTimeIn}</TableCell>
                 <TableCell className="font-medium whitespace-nowrap">{formattedTimeOut}</TableCell>
-                <TableCell className="font-medium whitespace-nowrap text-center">{hoursWorked}</TableCell>
                 <TableCell className="font-medium whitespace-nowrap text-center">{overtime}</TableCell>
                 <TableCell className="font-medium whitespace-nowrap text-center">{doubleTime}</TableCell>
+                <TableCell className="font-medium whitespace-nowrap text-center">{hoursWorked}</TableCell>
                 <TableCell className="font-medium whitespace-nowrap text-center">{undertime}</TableCell>
                 <TableCell className="flex gap-2  justify-center">
                   <DeleteDTR id={id as string} />

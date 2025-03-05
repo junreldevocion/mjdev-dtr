@@ -9,7 +9,7 @@ import { Toaster } from "@/components/ui/sonner";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { OJT_HOURS } from "@/constant";
-import DTR, { IDTR } from "@/model/dtrModel";
+import DTR, { IDTR } from "@/model/dtr.model";
 
 
 export default async function Home() {

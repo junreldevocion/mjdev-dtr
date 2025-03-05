@@ -21,6 +21,5 @@ const DTRSchema: Schema = new Schema<IDTR>({
   doubleTime: { type: String, required: true },
 }, options);
 
-const DTR = mongoose.model<IDTR>('DTR', DTRSchema);
-
-export default DTR;
+delete mongoose.models['DTR'];
+export default mongoose.model('DTR', DTRSchema)
