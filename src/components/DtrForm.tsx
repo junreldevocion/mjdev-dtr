@@ -19,10 +19,10 @@ import { Calendar } from "./ui/calendar"
 import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover"
 import { cn, formatResponse } from "@/lib/utils"
 import { CalendarIcon, Save } from "lucide-react"
-import { IDTR } from "@/model/dtrModel"
 import { format } from "date-fns"
 import { Checkbox } from "./ui/checkbox"
 import { CheckboxProps } from "@radix-ui/react-checkbox"
+import { IDTR } from "@/model/dtr.model"
 
 const FormSchema = z.object({
   timeInOutDate: z.date(),
