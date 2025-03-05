@@ -1,14 +1,14 @@
 
-import { updateDTR } from "@/app/actions"
+import { getDTR, updateDTR } from "@/app/actions"
 import { DtrForm } from "@/components/DtrForm"
 import { Button } from "@/components/ui/button"
-import DTR, { IDTR } from "@/model/dtr.model"
+import  { IDTR } from "@/model/dtr.model"
 import { ArrowLeft } from "lucide-react"
 import Link from "next/link"
 
 export default async function UpdateDTR({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params
-  const data = await DTR.findById(slug)
+  const data = await getDTR(slug)
 
   const jsonData = JSON.parse(JSON.stringify(data)) as IDTR
   

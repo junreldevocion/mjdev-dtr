@@ -23,17 +23,18 @@ import { format } from "date-fns"
 import { Checkbox } from "./ui/checkbox"
 import { CheckboxProps } from "@radix-ui/react-checkbox"
 import { IDTR } from "@/model/dtr.model"
+import { toast } from "sonner"
 
-const FormSchema = z.object({
+export const FormSchema = z.object({
   timeInOutDate: z.date(),
-  timeIn: z.string().min(0, { message: 'Time in should be greater than 00:00' }),
-  timeOut: z.string().min(0, { message: 'Time out should be greater than 00:00' }),
+  timeIn: z.string().min(1, { message: 'Time in should be greater than 00:00' }),
+  timeOut: z.string().min(1, { message: 'Time out should be greater than 00:00' }),
   id: z.string().optional(),
   isDoubleTime: z.boolean().optional()
 })
 
 interface DtrFormProps {
-  action: string | ((formData: FormData) => void | Promise<void>) | undefined;
+  action: (e: z.infer<typeof FormSchema>) => Promise<void>;
   data?: IDTR
 }
 
@@ -52,9 +53,22 @@ export function DtrForm({ action, data }: DtrFormProps) {
     },
   })
 
+  const onSubmit = async (data: z.infer<typeof FormSchema>) => {
+
+    await action(data)
+
+    toast("Event has been created", {
+      description: "Sunday, December 03, 2023 at 9:00 AM",
+      action: {
+        label: "Undo",
+        onClick: () => console.log("Undo"),
+      },
+    })
+  }
+
   return (
     <Form {...form}>
-      <form action={action} className="w-full flex gap-4 flex-col">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="w-full flex gap-4 flex-col">
         <FormField
           control={form.control}
           name="timeInOutDate"
