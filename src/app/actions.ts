@@ -5,15 +5,13 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { computedFormData } from "./actions.service";
 import DTR from "@/model/dtr.model";
+import { z } from "zod";
+import { FormSchema } from "@/components/DtrForm";
 
-
-export const createDTR = async (formData: FormData) => {
+export const createDTR = async (request: z.infer<typeof FormSchema>) => {
   await connectToMongoDB()
 
-  const timeInOutDate = formData.get("timeInOutDate");
-  const timeIn = formData.get("timeIn");
-  const timeOut = formData.get("timeOut");
-  const isDoubleTime = formData.get("isDoubleTime");
+  const { timeInOutDate, timeIn, timeOut, isDoubleTime } = request
 
   const data = computedFormData(timeInOutDate as unknown as string, timeIn as unknown as string, timeOut as unknown as string, isDoubleTime as unknown as boolean);
 
@@ -30,13 +28,9 @@ export const createDTR = async (formData: FormData) => {
   redirect('/')
 };
 
-export const updateDTR = async (formData: FormData) => {
+export const updateDTR = async (request: z.infer<typeof FormSchema>) => {
   await connectToMongoDB();
-  const timeInOutDate = formData.get("timeInOutDate");
-  const timeIn = formData.get("timeIn");
-  const timeOut = formData.get("timeOut");
-  const id = formData.get('id');
-  const isDoubleTime = formData.get("isDoubleTime");
+  const { timeInOutDate, timeIn, timeOut, isDoubleTime, id } = request
 
   const data = computedFormData(timeInOutDate as unknown as string, timeIn as unknown as string, timeOut as unknown as string, isDoubleTime as unknown as boolean);
 
@@ -65,6 +59,18 @@ export const deleteDTR = async (formData: FormData) => {
 
   await DTR.deleteOne({ _id: id });
 
-  revalidatePath("/");  
+  revalidatePath("/");
 
+}
+
+export const getDTR = async (id: string) => {
+  await connectToMongoDB();
+
+  const result = DTR.findById(id);
+
+  if (!id || !result) {
+    throw new Error('failed to fetch DTR');
+  }
+
+  return result
 }
