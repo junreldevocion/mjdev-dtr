@@ -81,13 +81,11 @@ export const formatResponse = (data: IDTR) => {
   return formattedData;
 }
 
-export const totalRendredTime = (dtrList: IDTR[]) => {
+export const totalRenderedTime = (dtrList: IDTR[]) => {
   const { hours: hoursWorked, minutes: minutesWorked } = calculateExactTime(dtrList, 'hoursWorked');
-  const { hours: overtimeHours, minutes: overtimeMinutes } = calculateExactTime(dtrList, 'overtime');
-  const { hours: doubleTimeHours, minutes: doubleTimeMinutes } = calculateExactTime(dtrList, 'doubleTime');
 
-  let totalHoursRendered = hoursWorked + overtimeHours + doubleTimeHours;
-  let totalMinutesRendred = minutesWorked + overtimeMinutes + doubleTimeMinutes;
+  let totalHoursRendered = hoursWorked;
+  let totalMinutesRendred = minutesWorked;
 
   if (totalMinutesRendred > MINUTES_WORKED) {
 
@@ -97,7 +95,6 @@ export const totalRendredTime = (dtrList: IDTR[]) => {
     totalMinutesRendred = calcutedMinutes
     totalHoursRendered += calculatedHours
   }
-
 
   return {
     hours: totalHoursRendered,

@@ -3,7 +3,7 @@
 
 import { Dialog } from "@/components/ui/dialog";
 import { Plus } from "lucide-react";
-import { calculateTotalHours, formatTime, totalRendredTime } from "@/lib/utils";
+import { calculateTotalHours, formatTime, totalRenderedTime } from "@/lib/utils";
 import DTRTable from "@/components/DTRTable";
 import { Toaster } from "@/components/ui/sonner";
 import Link from "next/link";
@@ -19,7 +19,7 @@ export default async function Home() {
   const totalHours = calculateTotalHours(dtrList);
   const calculatedRemainingHours = OJT_HOURS - totalHours;
 
-  const { hours, minutes } = totalRendredTime(dtrList)
+  const { hours, minutes } = totalRenderedTime(dtrList)
 
   const formattedTime = formatTime(hours.toString(), minutes.toString());
 
