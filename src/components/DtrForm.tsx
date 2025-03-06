@@ -55,6 +55,8 @@ export function DtrForm({ action, data }: DtrFormProps) {
 
   const onSubmit = async (data: z.infer<typeof FormSchema>) => {
 
+    console.log(data, 'data')
+
     await action(data)
 
     toast("Event has been created", {
@@ -74,9 +76,9 @@ export function DtrForm({ action, data }: DtrFormProps) {
           name="timeInOutDate"
           render={({ field }) => {
             const { value, onChange } = field
+            console.log(value, 'value')
             return <FormItem className="flex flex-col">
               <FormLabel>Select date</FormLabel>
-              <Input type="hidden" {...field} value={format(value, 'yyyy-MM-dd')} />
               <Popover>
                 <PopoverTrigger asChild>
                   <FormControl>

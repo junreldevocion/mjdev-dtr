@@ -50,8 +50,6 @@ export const computedFormData = (timeInOutDate: string, timeIn: string, timeOut:
     hoursWorked = doubleTime
   }
 
-
-
   return {
     timeInOutDate: formattedTimeInOutDate,
     timeIn: timeInDate,
