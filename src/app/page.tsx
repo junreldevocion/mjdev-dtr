@@ -19,6 +19,8 @@ export default async function Home() {
   const totalHours = calculateTotalHours(dtrList);
   const calculatedRemainingHours = OJT_HOURS - totalHours;
 
+  const remainingDays = Math.floor(calculatedRemainingHours / 8)
+
   const { hours, minutes } = totalRenderedTime(dtrList)
 
   const formattedTime = formatTime(hours.toString(), minutes.toString());
@@ -32,6 +34,7 @@ export default async function Home() {
             <h4 className="text-sm font-medium text-gray-500 dark:text-gray-400">Total hours need to render: <span className="font-medium text-gray-700">{OJT_HOURS}</span></h4>
             <h4 className="text-sm font-medium text-gray-500 dark:text-gray-400">Total hours rendered: <span className="font-medium text-gray-700">{formattedTime}</span></h4>
             <h4 className="text-sm font-medium text-gray-500 dark:text-gray-400">Remaining hours: <span className="font-medium text-gray-700">{calculatedRemainingHours}</span></h4>
+            <h4 className="text-sm font-medium text-gray-500 dark:text-gray-400">Remaining days: <span className="font-medium text-gray-700">{remainingDays}</span></h4>
           </div>
           <Link href="/add" className=""><Button variant="outline">Add DTR<Plus /></Button></Link>
         </Dialog>
