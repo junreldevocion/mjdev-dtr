@@ -55,9 +55,12 @@ export function DtrForm({ action, data }: DtrFormProps) {
 
   const onSubmit = async (data: z.infer<typeof FormSchema>) => {
 
-    console.log(data, 'data')
+    const formatData = {
+      ...data,
+      timeInOutDate: format(data.timeInOutDate, 'yyyy-MM-dd') as unknown as Date
+    }
 
-    await action(data)
+    await action(formatData)
 
     toast("Event has been created", {
       description: "Sunday, December 03, 2023 at 9:00 AM",
@@ -149,7 +152,6 @@ export function DtrForm({ action, data }: DtrFormProps) {
             control={form.control}
             name="isDoubleTime"
             render={({ field }) => {
-              console.log(field, 'field')
               return <FormItem className="flex flex-row w-full">
                 <Checkbox {...field as unknown as CheckboxProps} checked={field.value} onCheckedChange={field.onChange} />
                 <FormLabel>Is double time?</FormLabel>
