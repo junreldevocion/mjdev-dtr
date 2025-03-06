@@ -13,7 +13,11 @@ export const createDTR = async (request: z.infer<typeof FormSchema>) => {
 
   const { timeInOutDate, timeIn, timeOut, isDoubleTime } = request
 
-  const data = computedFormData(timeInOutDate as unknown as string, timeIn as unknown as string, timeOut as unknown as string, isDoubleTime as unknown as boolean);
+  const newTimeInOutDate = new Date(timeInOutDate)
+
+  const data = computedFormData(newTimeInOutDate, timeIn as unknown as string, timeOut as unknown as string, isDoubleTime as unknown as boolean);
+
+
 
   // Validate the input
   if (!timeInOutDate || !timeIn || !timeOut) {
@@ -32,7 +36,9 @@ export const updateDTR = async (request: z.infer<typeof FormSchema>) => {
   await connectToMongoDB();
   const { timeInOutDate, timeIn, timeOut, isDoubleTime, id } = request
 
-  const data = computedFormData(timeInOutDate as unknown as string, timeIn as unknown as string, timeOut as unknown as string, isDoubleTime as unknown as boolean);
+  const newTimeInOutDate = new Date(timeInOutDate)
+
+  const data = computedFormData(newTimeInOutDate, timeIn as unknown as string, timeOut as unknown as string, isDoubleTime as unknown as boolean);
 
   // Validate the input
   if (!timeInOutDate || !timeIn || !timeOut) {

@@ -2,9 +2,9 @@ import { HOURS_WORKED, MINUTES_WORKED } from "@/constant";
 import { intervalToDuration } from "date-fns";
 import { format } from "date-fns";
 
-export const computedFormData = (timeInOutDate: string, timeIn: string, timeOut: string, isDoubleTime: boolean) => {
+export const computedFormData = (timeInOutDate: Date, timeIn: string, timeOut: string, isDoubleTime: boolean) => {
 
-  const formattedTimeInOutDate = new Date(timeInOutDate)
+  const formattedTimeInOutDate = timeInOutDate
 
   const formatDateTimeIn = format(formattedTimeInOutDate, 'yyyy/MM/dd');
   const formatDateTimeOut = format(formattedTimeInOutDate, 'yyyy/MM/dd');
