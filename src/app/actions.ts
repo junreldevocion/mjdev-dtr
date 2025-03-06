@@ -72,7 +72,7 @@ export const deleteDTR = async (formData: FormData) => {
 export const getDTR = async (id: string) => {
   await connectToMongoDB();
 
-  const result = DTR.findById(id).sort('asc');
+  const result = DTR.findById(id);
 
   if (!id || !result) {
     throw new Error('failed to fetch DTR');
