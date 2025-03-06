@@ -14,7 +14,7 @@ import DTR, { IDTR } from "@/model/dtr.model";
 
 export default async function Home() {
 
-  const dtrList: IDTR[] = await DTR.find();
+  const dtrList = await DTR.find().sort({ timeInOutDate: -1 }) as unknown as IDTR[];
 
   const totalHours = calculateTotalHours(dtrList);
   const calculatedRemainingHours = OJT_HOURS - totalHours;
