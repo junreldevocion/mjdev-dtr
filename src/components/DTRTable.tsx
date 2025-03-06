@@ -53,7 +53,7 @@ const DTRTable: React.FC<DTRTableProps> = ({ dtrList }) => {
           )}
           {dtrList.map(({ timeIn, timeOut, timeInOutDate, overtime, hoursWorked, doubleTime, undertime, _id: id }, index) => {
 
-            const formattedTimeInOutDate = format(timeInOutDate, 'dd/MM/yyyy');
+            const formattedTimeInOutDate = format(timeInOutDate, 'MMM dd yyyy');
             const formattedTimeIn = format(timeIn, 'hh:mm a');
             const formattedTimeOut = format(timeOut, 'hh:mm a');
 
