@@ -21,7 +21,7 @@ export default async function Home() {
 
   const calculatedRemainingHours = OJT_HOURS - hours;
 
-  const remainingDays = Math.floor(calculatedRemainingHours / 8)
+  const remainingDays = Math.ceil(calculatedRemainingHours / 8)
 
   const formattedTime = formatTime(hours.toString(), minutes.toString());
 
