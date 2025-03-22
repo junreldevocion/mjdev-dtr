@@ -68,7 +68,7 @@ const DTRTable: React.FC<DTRTableProps> = ({ dtrList }) => {
                 <TableCell className="font-medium whitespace-nowrap text-center">{undertime}</TableCell>
                 <TableCell className="flex gap-2  justify-center">
                   <DeleteDTR id={id as string} />
-                  <Link href={`/${id}`}><Button variant="default"><Pencil /></Button></Link>
+                  <Link href={`/dtr/${id}`}><Button variant="default"><Pencil /></Button></Link>
                 </TableCell>
               </TableRow>
             )
@@ -82,6 +82,10 @@ const DTRTable: React.FC<DTRTableProps> = ({ dtrList }) => {
             <TableCell className="font-medium whitespace-nowrap text-center">{formattedTimeForHoursWorked}</TableCell>
             <TableCell className="font-medium whitespace-nowrap text-center ">{formattedTimeForUndertime}</TableCell>
             <TableCell className="font-medium whitespace-normal text-center"></TableCell>
+          </TableRow>
+          <TableRow>
+            <TableCell colSpan={7} className="font-medium">Total Rows</TableCell>
+            <TableCell className="font-medium whitespace-nowrap text-center">{dtrList.length}</TableCell>
           </TableRow>
         </TableFooter>
       </Table>

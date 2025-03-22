@@ -3,7 +3,7 @@ import { clsx, type ClassValue } from "clsx"
 import { twMerge } from "tailwind-merge"
 import { getTotalHours, getTotaMinutes } from "./utils.service";
 import { format } from "date-fns";
-import { MINUTES_WORKED } from "@/constant";
+import { HOURS_WORKED, MINUTES_WORKED } from "@/constant";
 import { IDTR } from "@/model/dtr.model";
 
 export function cn(...inputs: ClassValue[]) {
@@ -25,12 +25,25 @@ export const formatTime = (hours: string, minutes: string) => {
 }
 
 /**
+ * Converts a given number of hours into hours and minutes.
+ *
+ * @param totalHours - The total number of hours to convert.
+ * @returns An object containing the calculated hours and minutes.
+ */
+export const getHoursAndMinutes = (totalHours: number) => {
+  const hours = Math.floor(totalHours);
+  const minutes = Math.round((totalHours - hours) * 60);
+
+  return { hours, minutes };
+};
+
+/**
  * Calculates the total hours worked from a list of DTR (Daily Time Record) entries.
  *
  * @param {IDTR[]} dtrList - An array of DTR entries, each containing the hours worked.
  * @returns {number} The total hours worked, rounded up to two decimal places.
  */
-export const calculateTotalHours = (dtrList: IDTR[]) => {
+export const calculateTotalHours = (dtrList: IDTR[]): number => {
   const totalHours = dtrList.reduce((total, { hoursWorked }) => total + parseFloat(hoursWorked), 0);
 
   return Math.ceil(totalHours * 100) / 100;
@@ -48,8 +61,10 @@ export const calculateExactTime = (dtrList: IDTR[], key: keyof IDTR) => {
   const totalMinutes = getTotaMinutes(dtrList, key)
   const minutesToHours = Math.floor(totalMinutes / 60);
   const hours = totalHours + minutesToHours;
+  const days = hours / HOURS_WORKED
+
   const minutes = totalMinutes % 60;
-  return { hours, minutes };
+  return { hours, minutes, days };
 }
 
 export const formatResponse = (data: IDTR) => {

@@ -1,6 +1,5 @@
 import { IDTR } from "@/model/dtr.model";
 
-
 export const getTotalHours = (dtrList: IDTR[], key: keyof IDTR) => {
   const totalHours = dtrList.reduce((total, item) => {
     const hours = item[key];
