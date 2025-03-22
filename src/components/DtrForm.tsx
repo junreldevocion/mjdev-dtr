@@ -79,7 +79,6 @@ export function DtrForm({ action, data }: DtrFormProps) {
           name="timeInOutDate"
           render={({ field }) => {
             const { value, onChange } = field
-            console.log(value, 'value')
             return <FormItem className="flex flex-col">
               <FormLabel>Select date</FormLabel>
               <Popover>
