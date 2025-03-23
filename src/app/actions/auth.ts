@@ -7,8 +7,10 @@ import USER from "@/model/user.model";
 import bcryptjs from "bcryptjs";
 import { z } from "zod";
 import { getUser, verifySession } from "@/lib/dal";
+import { connectToMongoDB } from "@/lib/mongodb";
 
 export async function signup(request: z.infer<typeof SignupFormSchema>) {
+  await connectToMongoDB();
 
   // 1. Validate form fields
   const validatedFields = SignupFormSchema.safeParse({
@@ -64,11 +66,13 @@ export async function signup(request: z.infer<typeof SignupFormSchema>) {
 }
 
 export async function logout() {
+  await connectToMongoDB();
   await deleteSession()
   redirect('/signin')
 }
 
 export async function signin(request: z.infer<typeof SigninFormSchema>) {
+  await connectToMongoDB();
   const validatedFields = SigninFormSchema.safeParse({
     email: request.email,
     password: request.password,
@@ -101,6 +105,8 @@ export async function signin(request: z.infer<typeof SigninFormSchema>) {
 }
 
 export async function updateUser(request: z.infer<typeof UpdateUserFormSchema>) {
+
+  await connectToMongoDB();
 
   const session = await verifySession()
 
