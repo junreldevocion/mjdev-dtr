@@ -8,6 +8,7 @@ export interface IDTR extends Document {
   overtime: string;
   undertime: string;
   doubleTime: string;
+  userId: string
 }
 const options = { timestamps: true };
 
@@ -19,7 +20,9 @@ const DTRSchema: Schema = new Schema<IDTR>({
   overtime: { type: String, required: true },
   undertime: { type: String, required: true },
   doubleTime: { type: String, required: true },
+  userId: { type: String, required: true },
 }, options);
 
 delete mongoose.models['DTR'];
-export default mongoose.model('DTR', DTRSchema)
+const DTR = mongoose.model('DTR', DTRSchema)
+export default DTR

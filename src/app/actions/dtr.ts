@@ -3,12 +3,14 @@
 import { connectToMongoDB } from "@/lib/mongodb";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
-import { computedFormData } from "./actions.service";
 import DTR from "@/model/dtr.model";
 import { z } from "zod";
-import { FormSchema } from "@/components/DtrForm";
+import { computedFormData } from "./dtr.service";
+import { verifySession } from "@/lib/dal";
+import { DTRFormSchema } from "@/lib/definations";
 
-export const createDTR = async (request: z.infer<typeof FormSchema>) => {
+export const createDTR = async (request: z.infer<typeof DTRFormSchema>) => {
+  const session = await verifySession()
   await connectToMongoDB()
 
   const { timeInOutDate, timeIn, timeOut, isDoubleTime } = request
@@ -24,7 +26,7 @@ export const createDTR = async (request: z.infer<typeof FormSchema>) => {
     throw new Error('Missing timeInOutDate, timeIn, or timeOut');
   }
 
-  const newDTR = await DTR.create(data);
+  const newDTR = await DTR.create({ ...data, userId: session.userId });
   //  Saving the new dtr to the database
   await newDTR.save();
   // Triggering revalidation of the specified path("/")
@@ -32,7 +34,7 @@ export const createDTR = async (request: z.infer<typeof FormSchema>) => {
   redirect('/')
 };
 
-export const updateDTR = async (request: z.infer<typeof FormSchema>) => {
+export const updateDTR = async (request: z.infer<typeof DTRFormSchema>) => {
   await connectToMongoDB();
   const { timeInOutDate, timeIn, timeOut, isDoubleTime, id } = request
 
@@ -77,6 +79,13 @@ export const getDTR = async (id: string) => {
   if (!id || !result) {
     throw new Error('failed to fetch DTR');
   }
+
+  return result
+}
+
+export const updateMany = async () => {
+  const session = await verifySession()
+  const result = DTR.updateMany({}, { $set: { userId: session?.userId } });
 
   return result
 }

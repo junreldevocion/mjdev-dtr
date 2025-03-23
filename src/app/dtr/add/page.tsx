@@ -1,4 +1,5 @@
-import { createDTR } from "@/app/actions";
+
+import { createDTR } from "@/app/actions/dtr";
 import { DtrForm } from "@/components/DtrForm";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
@@ -11,7 +12,7 @@ export default async function AddDTR() {
         <Link href="/"><Button variant="link" className="text-left"><ArrowLeft /> Back</Button></Link>
         <h1 className="text-2xl font-semibold">Add Daily Time Record</h1>
         <h4 className="font-medium tracking-tight text-sm float-left xl:float-end">Fill up the form below</h4>
-        <DtrForm action={createDTR}  />
+        <DtrForm action={createDTR} />
       </div>
     </>
   );

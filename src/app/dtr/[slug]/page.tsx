@@ -1,8 +1,9 @@
 
-import { getDTR, updateDTR } from "@/app/actions"
+
+import { getDTR, updateDTR } from "@/app/actions/dtr"
 import { DtrForm } from "@/components/DtrForm"
 import { Button } from "@/components/ui/button"
-import  { IDTR } from "@/model/dtr.model"
+import { IDTR } from "@/model/dtr.model"
 import { ArrowLeft } from "lucide-react"
 import Link from "next/link"
 
@@ -11,7 +12,7 @@ export default async function UpdateDTR({ params }: { params: Promise<{ slug: st
   const data = await getDTR(slug)
 
   const jsonData = JSON.parse(JSON.stringify(data)) as IDTR
-  
+
   return (
     <div className="max-w-3xl m-auto pt-15 pb-8 flex flex-col gap-4 px-4">
       <Link href="/"><Button variant="link" className="text-left"><ArrowLeft /> Back</Button></Link>

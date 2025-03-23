@@ -1,6 +1,6 @@
 'use server'
 
-import { deleteDTR } from "@/app/actions"
+import { deleteDTR } from "@/app/actions/dtr"
 import { Button } from "./ui/button"
 import { Trash2 } from "lucide-react"
 

@@ -3,19 +3,22 @@
 
 import { Dialog } from "@/components/ui/dialog";
 import { Plus } from "lucide-react";
-import {  formatTime, totalRenderedTime } from "@/lib/utils";
+import { formatTime, totalRenderedTime } from "@/lib/utils";
 import DTRTable from "@/components/DTRTable";
 import { Toaster } from "@/components/ui/sonner";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { MINUTES_WORKED, OJT_HOURS } from "@/constant";
 import DTR, { IDTR } from "@/model/dtr.model";
+import { verifySession } from "@/lib/dal";
 
 
 export default async function Home() {
 
-  const dtrList = await DTR.find().sort({ timeInOutDate: -1 }) as unknown as IDTR[];
- 
+  const session = await verifySession()
+
+  const dtrList = await DTR.find({ userId: session?.userId }).sort({ timeInOutDate: -1 }) as unknown as IDTR[];
+
 
   const { hours, minutes } = totalRenderedTime(dtrList)
 

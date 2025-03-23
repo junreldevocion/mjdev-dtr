@@ -24,17 +24,12 @@ import { Checkbox } from "./ui/checkbox"
 import { CheckboxProps } from "@radix-ui/react-checkbox"
 import { IDTR } from "@/model/dtr.model"
 import { toast } from "sonner"
+import { DTRFormSchema } from "@/lib/definations"
 
-export const FormSchema = z.object({
-  timeInOutDate: z.date(),
-  timeIn: z.string().min(1, { message: 'Time in should be greater than 00:00' }),
-  timeOut: z.string().min(1, { message: 'Time out should be greater than 00:00' }),
-  id: z.string().optional(),
-  isDoubleTime: z.boolean().optional()
-})
+
 
 interface DtrFormProps {
-  action: (e: z.infer<typeof FormSchema>) => Promise<void>;
+  action: (e: z.infer<typeof DTRFormSchema>) => Promise<void>;
   data?: IDTR
 }
 
@@ -42,8 +37,8 @@ export function DtrForm({ action, data }: DtrFormProps) {
 
   const { timeInOutDate, timeIn, timeOut } = formatResponse(data!)
 
-  const form = useForm<z.infer<typeof FormSchema>>({
-    resolver: zodResolver(FormSchema),
+  const form = useForm<z.infer<typeof DTRFormSchema>>({
+    resolver: zodResolver(DTRFormSchema),
     defaultValues: {
       timeInOutDate: timeInOutDate,
       timeIn,
@@ -53,7 +48,7 @@ export function DtrForm({ action, data }: DtrFormProps) {
     },
   })
 
-  const onSubmit = async (data: z.infer<typeof FormSchema>) => {
+  const onSubmit = async (data: z.infer<typeof DTRFormSchema>) => {
 
     const formatData = {
       ...data,
