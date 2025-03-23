@@ -5,6 +5,7 @@ import { redirect } from 'next/navigation'
 import { cache } from 'react'
 import { decrypt } from './session'
 import USER from '@/model/user.model'
+import { connectToMongoDB } from './mongodb'
 
 export const verifySession = cache(async () => {
   const cookie = (await cookies()).get('session')?.value
@@ -18,6 +19,7 @@ export const verifySession = cache(async () => {
 })
 
 export const getUser = cache(async () => {
+  await connectToMongoDB();
   const session = await verifySession()
   if (!session) return null
 
