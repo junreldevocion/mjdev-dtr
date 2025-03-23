@@ -8,6 +8,7 @@ import bcryptjs from "bcryptjs";
 import { z } from "zod";
 import { getUser, verifySession } from "@/lib/dal";
 import { connectToMongoDB } from "@/lib/mongodb";
+import { revalidatePath } from "next/cache";
 
 export async function signup(request: z.infer<typeof SignupFormSchema>) {
   await connectToMongoDB();
@@ -37,7 +38,7 @@ export async function signup(request: z.infer<typeof SignupFormSchema>) {
   }
 
   // e.g. Hash the user's password before storing it
-  const hashedPassword = bcryptjs.hash(password, 10)
+  const hashedPassword = await bcryptjs.hash(password, 10)
 
   // 3. Insert the user into the database or call an Auth Library's API
   const newDTR = await USER.create({
@@ -90,7 +91,7 @@ export async function signin(request: z.infer<typeof SigninFormSchema>) {
 
   const passwordHash = result?.password as unknown as string
 
-  const isMatch = bcryptjs.compare(password, passwordHash)
+  const isMatch = await bcryptjs.compare(password, passwordHash)
 
 
   if (!isMatch) {
@@ -100,6 +101,7 @@ export async function signin(request: z.infer<typeof SigninFormSchema>) {
   }
 
   await createSession((result?._id as string).toString())
+  revalidatePath('/')
   redirect('/')
 
 }
