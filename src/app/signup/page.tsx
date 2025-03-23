@@ -1,11 +1,9 @@
 import RegisterForm from "@/components/RegisterForm";
 
-
-
 export default function Page() {
   return (
-    <div className="flex min-h-svh w-full p-6">
-      <div className="w-full max-w-sm">
+    <div className="flex w-full p-6 m-auto mt-10">
+      <div className="w-full max-w-sm m-auto">
         <RegisterForm />
       </div>
     </div>

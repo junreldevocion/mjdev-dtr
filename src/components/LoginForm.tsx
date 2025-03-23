@@ -7,28 +7,28 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { Input } from "./ui/input"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "./ui/card"
 import { Button } from "./ui/button"
-import { SignupFormSchema } from "@/lib/definations"
-import { signup } from "@/app/actions/auth"
+import { SigninFormSchema } from "@/lib/definations"
+import { signin } from "@/app/actions/auth"
 import { useState } from "react"
+import { toast } from "sonner"
 import Link from "next/link"
 
-const RegisterForm = () => {
+const LoginForm = () => {
 
   const [loading, setLoading] = useState<boolean>(false)
 
-  const form = useForm<z.infer<typeof SignupFormSchema>>({
-    resolver: zodResolver(SignupFormSchema),
+  const form = useForm<z.infer<typeof SigninFormSchema>>({
+    resolver: zodResolver(SigninFormSchema),
     defaultValues: {
-      name: '',
       email: '',
       password: '',
     }
   })
 
-  const onSubmit = async (data: z.infer<typeof SignupFormSchema>) => {
+  const onSubmit = async (data: z.infer<typeof SigninFormSchema>) => {
     setLoading(true)
-
-    await signup(data)
+    const result = await signin(data)
+    toast.error(result.message)
     setLoading(false)
   }
 
@@ -36,22 +36,14 @@ const RegisterForm = () => {
   return (
     <Card className="flex flex-col gap-6">
       <CardHeader>
-        <CardTitle className="text-2xl">Signup</CardTitle>
+        <CardTitle className="text-2xl">Signin</CardTitle>
         <CardDescription>
-          Signup your account
+          Signin your account
         </CardDescription>
       </CardHeader>
       <CardContent>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="flex gap-4 flex-col">
-            <FormField name="name" control={form.control} render={({ field }) => {
-              return <FormItem>
-                <FormLabel>Name</FormLabel>
-                <Input {...field} />
-                <FormMessage />
-              </FormItem>
-            }}>
-            </FormField>
             <FormField name="email" control={form.control} render={({ field }) => {
               return <FormItem>
                 <FormLabel>Email</FormLabel>
@@ -68,18 +60,10 @@ const RegisterForm = () => {
               </FormItem>
             }}>
             </FormField>
-            {/* <FormField name="confPassword" control={form.control} render={({ field }) => {
-              return <FormItem>
-                <FormLabel>Confirm password</FormLabel>
-                <Input type="password" {...field}  />
-                <FormMessage />
-              </FormItem>
-            }}>
-            </FormField> */}
             <div className="text-center text-sm">
-              Already have an account? {" "}
-              <Link href="/signin" className="underline underline-offset-4">
-                Sign in
+              Don&apos;t have an account?{" "}
+              <Link href="/signup" className="underline underline-offset-4">
+                Sign up
               </Link>
             </div>
             <Button type="submit" variant="default" disabled={loading}>Submit</Button>
@@ -91,4 +75,4 @@ const RegisterForm = () => {
   )
 }
 
-export default RegisterForm
+export default LoginForm
