@@ -63,12 +63,13 @@ export async function signup(request: z.infer<typeof SignupFormSchema>) {
   // 4. Create user session
   await createSession(userId)
   // 5. Redirect user
-  redirect('/')
+  redirect('/home')
 }
 
 export async function logout() {
   await connectToMongoDB();
   await deleteSession()
+  revalidatePath('/home')
   redirect('/signin')
 }
 
@@ -89,7 +90,11 @@ export async function signin(request: z.infer<typeof SigninFormSchema>) {
 
   const result = await USER.findOne({ email: email })
 
+
+
   const passwordHash = result?.password as unknown as string
+
+
 
   if (!passwordHash) {
     return {
@@ -97,7 +102,9 @@ export async function signin(request: z.infer<typeof SigninFormSchema>) {
     }
   }
 
-  const isMatch = await bcryptjs.compare(password, passwordHash)
+  const isMatch = bcryptjs.compare(password, passwordHash)
+
+  console.log(isMatch, 'isMatch')
 
 
   if (!isMatch) {
@@ -137,7 +144,7 @@ export async function updateUser(request: z.infer<typeof UpdateUserFormSchema>) 
 
   const result = await getUser()
 
-  const isMatch = await bcryptjs.compare(oldPassword, result?.password as string)
+  const isMatch = bcryptjs.compare(oldPassword, result?.password as string)
 
   if (!result || !isMatch) {
     return {
