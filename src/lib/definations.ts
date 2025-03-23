@@ -20,6 +20,22 @@ export const SignupFormSchema = z.object({
     .trim(),
 })
 
+export const UpdateUserFormSchema = z.object({
+  name: z
+    .string()
+    .min(2, { message: 'Name must be at least 2 characters long.' })
+    .trim(),
+  email: z.string().email({ message: 'Please enter a valid email.' }).trim(),
+  oldPassword: z
+    .string()
+    .min(2, { message: 'Be at least 2 characters long' })
+    .trim(),
+  newPassword: z
+    .string()
+    .min(2, { message: 'Be at least 2 characters long' })
+    .trim(),
+})
+
 export const SigninFormSchema = z.object({
   email: z.string().email({ message: 'Please enter a valid email.' }).trim(),
   password: z

@@ -10,6 +10,8 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
 
+export const fetcher = (url: string) => fetch(url).then((res) => res.json());
+
 /**
  * Formats the given hours and minutes into a string with leading zeros if necessary.
  *

@@ -7,8 +7,7 @@ import useSWR from "swr";
 import { CircleUserRound } from "lucide-react";
 import Link from "next/link";
 import { logout } from "@/app/actions/auth";
-
-const fetcher = (url: string) => fetch(url).then((res) => res.json());
+import { fetcher } from "@/lib/utils";
 
 const Navbar = () => {
 
@@ -29,7 +28,8 @@ const Navbar = () => {
             <span className="text-sm font-medium text-gray-500 dark:text-gray-400">{data?.name}</span>
           </div>
         </Link>
-        <div className="relative">
+
+        {data?.name && <div className="relative">
           <CircleUserRound
             size={24}
             className="cursor-pointer"
@@ -39,11 +39,14 @@ const Navbar = () => {
             <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg dark:bg-gray-800">
               <ul className="py-1">
                 <li>
-                  <button
-                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-700 w-full text-left"
-                  >
-                    Update
-                  </button>
+                  <Link href="/updateUser">
+                    <button
+                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-700 w-full text-left"
+                    >
+                      Update
+                    </button>
+                  </Link>
+
                 </li>
                 <li>
                   <form action={logout}>
@@ -58,7 +61,7 @@ const Navbar = () => {
               </ul>
             </div>
           )}
-        </div>
+        </div>}
       </div>
     </nav>
   );

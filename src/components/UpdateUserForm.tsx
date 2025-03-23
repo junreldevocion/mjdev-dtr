@@ -7,30 +7,29 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { Input } from "./ui/input"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "./ui/card"
 import { Button } from "./ui/button"
-import { SignupFormSchema } from "@/lib/definations"
-import { signup } from "@/app/actions/auth"
+import { UpdateUserFormSchema } from "@/lib/definations"
+import { updateUser } from "@/app/actions/auth"
 import { useState } from "react"
 import Link from "next/link"
-import { toast } from "sonner"
+import { IUser } from "@/model/user.model"
 
-const RegisterForm = () => {
+const UpdateUserForm = ({ name, email }: IUser) => {
 
   const [loading, setLoading] = useState<boolean>(false)
 
-  const form = useForm<z.infer<typeof SignupFormSchema>>({
-    resolver: zodResolver(SignupFormSchema),
+  const form = useForm<z.infer<typeof UpdateUserFormSchema>>({
+    resolver: zodResolver(UpdateUserFormSchema),
     defaultValues: {
-      name: '',
-      email: '',
-      password: '',
+      name,
+      email,
+      oldPassword: '',
+      newPassword: ''
     }
   })
 
-  const onSubmit = async (data: z.infer<typeof SignupFormSchema>) => {
+  const onSubmit = async (data: z.infer<typeof UpdateUserFormSchema>) => {
     setLoading(true)
-
-    const result = await signup(data)
-    toast.error(result.message)
+    await updateUser(data)
     setLoading(false)
   }
 
@@ -38,15 +37,16 @@ const RegisterForm = () => {
   return (
     <Card className="flex flex-col gap-6">
       <CardHeader>
-        <CardTitle className="text-2xl">Signup</CardTitle>
+        <CardTitle className="text-2xl">Update account</CardTitle>
         <CardDescription>
-          Signup your account
+          Update your account
         </CardDescription>
       </CardHeader>
       <CardContent>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="flex gap-4 flex-col">
             <FormField name="name" control={form.control} render={({ field }) => {
+              console.log(field, 'field')
               return <FormItem>
                 <FormLabel>Name</FormLabel>
                 <Input {...field} />
@@ -62,9 +62,17 @@ const RegisterForm = () => {
               </FormItem>
             }}>
             </FormField>
-            <FormField name="password" control={form.control} render={({ field }) => {
+            <FormField name="oldPassword" control={form.control} render={({ field }) => {
               return <FormItem>
-                <FormLabel>Password</FormLabel>
+                <FormLabel>Old password</FormLabel>
+                <Input type="password" {...field} />
+                <FormMessage />
+              </FormItem>
+            }}>
+            </FormField>
+            <FormField name="newPassword" control={form.control} render={({ field }) => {
+              return <FormItem>
+                <FormLabel>New password</FormLabel>
                 <Input type="password" {...field} />
                 <FormMessage />
               </FormItem>
@@ -93,4 +101,4 @@ const RegisterForm = () => {
   )
 }
 
-export default RegisterForm
+export default UpdateUserForm
