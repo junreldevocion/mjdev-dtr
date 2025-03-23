@@ -3,7 +3,7 @@ import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 import { decrypt } from './lib/session'
 
-const protectedRoutes = ['/']
+const protectedRoutes = ['/home']
 const publicRoutes = ['/signin', '/signup']
 
 // This function can be marked `async` if using `await` inside
@@ -25,9 +25,10 @@ export async function middleware(req: NextRequest) {
   if (
     isPublicRoute &&
     session?.userId &&
-    !req.nextUrl.pathname.startsWith('/')
+    !req.nextUrl.pathname.startsWith('/home')
   ) {
-    return NextResponse.redirect(new URL('/', req.nextUrl))
+    console.log('shit naman')
+    return NextResponse.redirect(new URL('/home', req.nextUrl))
   }
 
 }

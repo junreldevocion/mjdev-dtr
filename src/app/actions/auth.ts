@@ -91,6 +91,12 @@ export async function signin(request: z.infer<typeof SigninFormSchema>) {
 
   const passwordHash = result?.password as unknown as string
 
+  if (!passwordHash) {
+    return {
+      message: 'Email or password not match in database!',
+    }
+  }
+
   const isMatch = await bcryptjs.compare(password, passwordHash)
 
 
@@ -101,8 +107,8 @@ export async function signin(request: z.infer<typeof SigninFormSchema>) {
   }
 
   await createSession((result?._id as string).toString())
-  revalidatePath('/')
-  redirect('/')
+  revalidatePath('/home')
+  redirect('/home')
 
 }
 
