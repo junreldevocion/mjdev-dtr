@@ -30,8 +30,8 @@ export const createDTR = async (request: z.infer<typeof DTRFormSchema>) => {
   //  Saving the new dtr to the database
   await newDTR.save();
   // Triggering revalidation of the specified path("/")
-  revalidatePath("/");
-  redirect('/')
+  revalidatePath("/home");
+  redirect('/home')
 };
 
 export const updateDTR = async (request: z.infer<typeof DTRFormSchema>) => {
@@ -52,8 +52,8 @@ export const updateDTR = async (request: z.infer<typeof DTRFormSchema>) => {
     runValidators: true,
   });
 
-  revalidatePath("/");
-  redirect('/')
+  revalidatePath("/home");
+  redirect('/home')
 
 }
 
@@ -67,7 +67,7 @@ export const deleteDTR = async (formData: FormData) => {
 
   await DTR.deleteOne({ _id: id });
 
-  revalidatePath("/");
+  revalidatePath("/home");
 
 }
 

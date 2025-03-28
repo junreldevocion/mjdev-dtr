@@ -25,9 +25,8 @@ export async function middleware(req: NextRequest) {
   if (
     isPublicRoute &&
     session?.userId &&
-    !req.nextUrl.pathname.startsWith('/home')
+    !path.startsWith('/home')
   ) {
-    console.log('shit naman')
     return NextResponse.redirect(new URL('/home', req.nextUrl))
   }
 
