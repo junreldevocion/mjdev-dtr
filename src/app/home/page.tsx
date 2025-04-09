@@ -7,7 +7,6 @@ import { formatTime, totalRenderedTime } from "@/lib/utils";
 import DTRTable from "@/components/DTRTable";
 import { Toaster } from "@/components/ui/sonner";
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
 import { MINUTES_WORKED, OJT_HOURS } from "@/constant";
 import DTR, { IDTR } from "@/model/dtr.model";
 import { verifySession } from "@/lib/dal";
@@ -30,18 +29,28 @@ export default async function Home() {
 
   const formattedTime = formatTime(hours.toString(), minutes.toString());
 
+  const isOJTCompleted = hours >= OJT_HOURS;
+
+  const remainingHours = !isOJTCompleted ? `${calculatedRemainingHours}:${calculatedRemainingMinutes}` : "0:0";
+  const remainingDaysText = !isOJTCompleted ? `${remainingDays}` : "0";
+  const href = isOJTCompleted ? "#" : "/dtr/add";
+  const buttonTextColor = isOJTCompleted ? "text-gray-600" : "text-black";
+
   return (
     <>
       <div className="max-w-screen-xl m-auto pt-20 p-4 pb-8">
         <Dialog>
-          <div className="flex justify-between pb-4 flex-col md:flex-row gap-4">
+          <div className="flex justify-between pb-4 flex-col gap-4">
             <h1 className="text-2xl font-semibold">Daily Time Record</h1>
-            <h4 className="text-sm font-medium text-gray-500 dark:text-gray-400">Total hours need to render: <span className="font-medium text-gray-700">{OJT_HOURS}</span></h4>
-            <h4 className="text-sm font-medium text-gray-500 dark:text-gray-400">Total hours rendered: <span className="font-medium text-gray-700">{formattedTime}</span></h4>
-            <h4 className="text-sm font-medium text-gray-500 dark:text-gray-400">Remaining hours: <span className="font-medium text-gray-700">{`${calculatedRemainingHours}:${calculatedRemainingMinutes}`}</span></h4>
-            <h4 className="text-sm font-medium text-gray-500 dark:text-gray-400">Remaining days: <span className="font-medium text-gray-700">{remainingDays}</span></h4>
+            {isOJTCompleted && (
+              <h1 className="text-2xl font-semibold text-green-600">Congratulations! You have completed your OJT hours!</h1>
+            )}
+            <h2 className="text-sm font-medium text-gray-500 dark:text-gray-400">Total hours need to render: <span className="font-medium text-gray-700">{OJT_HOURS}</span></h2>
+            <h2 className="text-sm font-medium text-gray-500 dark:text-gray-400">Total hours rendered: <span className="font-medium text-gray-700">{formattedTime}</span></h2>
+            <h2 className="text-sm font-medium text-gray-500 dark:text-gray-400">Remaining hours: <span className="font-medium text-gray-700">{`${remainingHours}`}</span></h2>
+            <h2 className="text-sm font-medium text-gray-500 dark:text-gray-400">Remaining days: <span className="font-medium text-gray-700">{remainingDaysText}</span></h2>
           </div>
-          <Link href="/dtr/add" className=""><Button variant="outline">Add DTR<Plus /></Button></Link>
+          <Link href={href} className={`flex flex-row ${buttonTextColor}`}>Add DTR<Plus /></Link>
         </Dialog>
         <DTRTable dtrList={dtrList} />
         <Toaster position="top-right" />
