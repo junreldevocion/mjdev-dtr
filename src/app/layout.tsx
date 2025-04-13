@@ -20,6 +20,8 @@ export const metadata: Metadata = {
   description: "Created by JDEV",
 };
 
+const shutdownText = process.env.SHUTDOWN
+
 export default async function RootLayout({
   children,
 }: Readonly<{
@@ -31,7 +33,8 @@ export default async function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <Navbar />
+        {shutdownText === "false" && (<Navbar />)}
+
         {children}
         <Toaster position="top-right" />
       </body>

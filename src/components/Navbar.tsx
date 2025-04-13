@@ -9,6 +9,8 @@ import Link from "next/link";
 import { logout } from "@/app/actions/auth";
 import { fetcher } from "@/lib/utils";
 
+
+
 const Navbar = () => {
 
   const { data } = useSWR('/api/auth', fetcher)
