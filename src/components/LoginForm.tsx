@@ -12,9 +12,9 @@ import { signin } from "@/app/actions/auth"
 import { useState } from "react"
 import { toast } from "sonner"
 import Link from "next/link"
+import { Mail, Lock, LogIn } from "lucide-react"
 
 const LoginForm = () => {
-
   const [loading, setLoading] = useState<boolean>(false)
 
   const form = useForm<z.infer<typeof SigninFormSchema>>({
@@ -32,46 +32,84 @@ const LoginForm = () => {
     setLoading(false)
   }
 
-
   return (
-    <Card className="flex flex-col gap-6">
-      <CardHeader>
-        <CardTitle className="text-2xl">Signin</CardTitle>
-        <CardDescription>
-          Signin your account
+    <Card className="border-gray-200 dark:border-gray-800">
+      <CardHeader className="pb-1 pt-4">
+        <div className="flex items-center justify-center mb-0">
+          <div className="p-1 bg-blue-100 dark:bg-blue-900 rounded-lg">
+            <LogIn className="w-4 h-4 text-blue-600 dark:text-blue-400" />
+          </div>
+        </div>
+        <CardTitle className="text-lg sm:text-2xl text-center mt-1">Welcome Back</CardTitle>
+        <CardDescription className="text-center text-xs sm:text-sm mt-0">
+          Sign in to your account
         </CardDescription>
       </CardHeader>
-      <CardContent>
+      <CardContent className="pt-1 pb-4">
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="flex gap-4 flex-col">
-            <FormField name="email" control={form.control} render={({ field }) => {
-              return <FormItem>
-                <FormLabel>Email</FormLabel>
-                <Input {...field} />
-                <FormMessage />
-              </FormItem>
-            }}>
-            </FormField>
-            <FormField name="password" control={form.control} render={({ field }) => {
-              return <FormItem>
-                <FormLabel>Password</FormLabel>
-                <Input type="password" {...field} />
-                <FormMessage />
-              </FormItem>
-            }}>
-            </FormField>
-            <div className="text-center text-sm">
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-2">
+            <div className="space-y-2">
+              <FormField
+                name="email"
+                control={form.control}
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="flex items-center gap-1 text-xs">
+                      <Mail className="w-3 h-3 text-gray-500" />
+                      Email
+                    </FormLabel>
+                    <Input
+                      {...field}
+                      className="bg-white dark:bg-gray-800 h-8 text-sm"
+                      placeholder="Enter your email"
+                    />
+                    <FormMessage className="text-xs" />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                name="password"
+                control={form.control}
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="flex items-center gap-1 text-xs">
+                      <Lock className="w-3 h-3 text-gray-500" />
+                      Password
+                    </FormLabel>
+                    <Input
+                      type="password"
+                      {...field}
+                      className="bg-white dark:bg-gray-800 h-8 text-sm"
+                      placeholder="Enter your password"
+                    />
+                    <FormMessage className="text-xs" />
+                  </FormItem>
+                )}
+              />
+            </div>
+
+            <Button
+              type="submit"
+              className="w-full bg-blue-600 hover:bg-blue-700 text-white h-8 mt-1 text-sm"
+              disabled={loading}
+            >
+              {loading ? "Signing in..." : "Sign In"}
+            </Button>
+
+            <div className="text-center text-xs text-gray-500 dark:text-gray-400 mt-2">
               Don&apos;t have an account?{" "}
-              <Link href="/signup" className="underline underline-offset-4">
+              <Link
+                href="/signup"
+                className="text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 font-medium"
+              >
                 Sign up
               </Link>
             </div>
-            <Button type="submit" variant="default" disabled={loading}>Submit</Button>
           </form>
         </Form>
       </CardContent>
-    </Card >
-
+    </Card>
   )
 }
 

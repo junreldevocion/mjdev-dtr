@@ -34,6 +34,7 @@ export const UpdateUserFormSchema = z.object({
     .string()
     .min(2, { message: 'Be at least 2 characters long' })
     .trim(),
+  image: z.any().optional(),
 })
 
 export const SigninFormSchema = z.object({

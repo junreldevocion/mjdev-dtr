@@ -119,18 +119,25 @@ export async function signin(request: z.infer<typeof SigninFormSchema>) {
 
 }
 
-export async function updateUser(request: z.infer<typeof UpdateUserFormSchema>) {
-
+export async function updateUser(formData: FormData) {
   await connectToMongoDB();
 
   const session = await verifySession()
 
+  // Extract data from FormData
+  const name = formData.get('name') as string;
+  const email = formData.get('email') as string;
+  const oldPassword = formData.get('oldPassword') as string;
+  const newPassword = formData.get('newPassword') as string;
+  const imageFile = formData.get('image') as File | null;
+
   // 1. Validate form fields
   const validatedFields = UpdateUserFormSchema.safeParse({
-    name: request.name,
-    email: request.email,
-    newPassword: request.newPassword,
-    oldPassword: request.oldPassword,
+    name,
+    email,
+    newPassword,
+    oldPassword,
+    image: imageFile
   })
 
   if (!validatedFields.success) {
@@ -140,11 +147,11 @@ export async function updateUser(request: z.infer<typeof UpdateUserFormSchema>) 
   }
 
   // 2. Prepare data for insertion into database
-  const { name, email, newPassword, oldPassword } = validatedFields.data
+  const { name: validatedName, email: validatedEmail, newPassword: validatedNewPassword, oldPassword: validatedOldPassword } = validatedFields.data
 
   const result = await getUser()
 
-  const isMatch = bcryptjs.compare(oldPassword, result?.password as string)
+  const isMatch = bcryptjs.compare(validatedOldPassword, result?.password as string)
 
   if (!result || !isMatch) {
     return {
@@ -152,10 +159,31 @@ export async function updateUser(request: z.infer<typeof UpdateUserFormSchema>) 
     }
   }
 
-  const hashedPassword = await bcryptjs.hash(newPassword, 10)
+  const hashedPassword = await bcryptjs.hash(validatedNewPassword, 10)
+
+  // Handle image upload if provided
+  let imageUrl = result.image;
+  if (imageFile) {
+    // In a real application, you would upload the image to a storage service
+    // and get back a URL. For this example, we'll use a data URL
+    // You would replace this with actual image upload logic
+    try {
+      // Convert the file to a base64 string
+      const buffer = await imageFile.arrayBuffer();
+      const base64 = Buffer.from(buffer).toString('base64');
+      const mimeType = imageFile.type;
+      imageUrl = `data:${mimeType};base64,${base64}`;
+    } catch (error) {
+      console.error('Error processing image:', error);
+      // Keep the existing image if there's an error
+    }
+  }
 
   await USER.findByIdAndUpdate(session?.userId, {
-    name, email, hashedPassword
+    name: validatedName,
+    email: validatedEmail,
+    password: hashedPassword,
+    image: imageUrl
   }, {
     new: true,
     runValidators: true,
