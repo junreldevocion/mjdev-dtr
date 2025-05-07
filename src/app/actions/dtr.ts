@@ -89,3 +89,11 @@ export const updateMany = async () => {
 
   return result
 }
+
+export const findAndModify = async () => {
+  const session = await verifySession()
+  const result = DTR.find({ userId: '67dfc77af807b328a9ad7dab' });
+  (await result).map(async (item) => {
+    await DTR.findByIdAndUpdate(item.id, { $set: { userId: session?.userId } })
+  })
+}

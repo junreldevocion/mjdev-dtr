@@ -4,14 +4,16 @@ import { formatTime, totalRenderedTime } from "@/lib/utils";
 import DTRTable from "@/components/DTRTable";
 import { Toaster } from "@/components/ui/sonner";
 import Link from "next/link";
-import { MINUTES_WORKED, OJT_HOURS } from "@/constant";
+import { MINUTES_WORKED } from "@/constant";
 import DTR, { IDTR } from "@/model/dtr.model";
 import { verifySession } from "@/lib/dal";
 import { addDays, format } from "date-fns";
+import { ojtHours } from "@/utils/ojtHours";
 
 export default async function Home() {
+  const OJT_HOURS = ojtHours()
   const session = await verifySession()
-  const dtrList = await DTR.find({ userId: session?.userId }).sort({ timeInOutDate: -1 }) as unknown as IDTR[];
+  const dtrList = await DTR.find({ userId: { $in: [session.userId] } }).sort({ timeInOutDate: -1 }) as unknown as IDTR[];
   const { hours, minutes } = totalRenderedTime(dtrList)
   const calculatedRemainingHours = Math.floor((((OJT_HOURS - hours) * MINUTES_WORKED) - minutes) / MINUTES_WORKED);
   const calculatedRemainingMinutes = MINUTES_WORKED - minutes
