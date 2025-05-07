@@ -7,6 +7,7 @@ import Link from "next/link";
 import { MINUTES_WORKED, OJT_HOURS } from "@/constant";
 import DTR, { IDTR } from "@/model/dtr.model";
 import { verifySession } from "@/lib/dal";
+import { addDays, format } from "date-fns";
 
 export default async function Home() {
   const session = await verifySession()
@@ -20,6 +21,11 @@ export default async function Home() {
   const remainingHours = !isOJTCompleted ? `${calculatedRemainingHours}:${calculatedRemainingMinutes}` : "0:0";
   const remainingDaysText = !isOJTCompleted ? `${remainingDays}` : "0";
   const href = isOJTCompleted ? "#" : "/dtr/add";
+
+  // Calculate expected end date
+  const today = new Date();
+  const expectedEndDate = !isOJTCompleted ? addDays(today, remainingDays) : today;
+  const formattedEndDate = format(expectedEndDate, 'MMMM dd, yyyy');
 
   return (
     <>
@@ -36,7 +42,7 @@ export default async function Home() {
               )}
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
               <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
                 <div className="flex items-center gap-3">
                   <div className="p-2 bg-blue-100 dark:bg-blue-900 rounded-lg">
@@ -81,6 +87,18 @@ export default async function Home() {
                   <div>
                     <p className="text-sm text-gray-500 dark:text-gray-400">Required Hours</p>
                     <p className="text-xl font-semibold">{OJT_HOURS} hrs</p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
+                <div className="flex items-center gap-3">
+                  <div className="p-2 bg-yellow-100 dark:bg-yellow-900 rounded-lg">
+                    <Calendar className="w-5 h-5 text-yellow-600 dark:text-yellow-400" />
+                  </div>
+                  <div>
+                    <p className="text-sm text-gray-500 dark:text-gray-400">Expected End Date</p>
+                    <p className="text-xl font-semibold">{formattedEndDate}</p>
                   </div>
                 </div>
               </div>
