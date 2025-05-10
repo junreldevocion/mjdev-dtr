@@ -8,7 +8,7 @@ import { MINUTES_WORKED } from "@/constant";
 import DTR, { IDTR } from "@/model/dtr.model";
 import { verifySession } from "@/lib/dal";
 import { addDays, format } from "date-fns";
-import { ojtHours } from "@/utils/ojtHours";
+import { ojtHours } from "@/lib/ojtHours";
 
 export default async function Home() {
   const OJT_HOURS = ojtHours()

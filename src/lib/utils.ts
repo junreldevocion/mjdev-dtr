@@ -1,10 +1,11 @@
 
 import { clsx, type ClassValue } from "clsx"
 import { twMerge } from "tailwind-merge"
-import { getTotalHours, getTotaMinutes } from "./utils.service";
 import { format } from "date-fns";
 import { HOURS_WORKED, MINUTES_WORKED } from "@/constant";
 import { IDTR } from "@/model/dtr.model";
+import { getTotalHours } from "@/utils/calculateTotalHours";
+import { getTotaMinutes } from "@/utils/calculateTotalMinutes";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))

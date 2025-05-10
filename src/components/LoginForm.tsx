@@ -13,8 +13,12 @@ import { useState } from "react"
 import { toast } from "sonner"
 import Link from "next/link"
 import { Mail, Lock, LogIn } from "lucide-react"
+import { useAppDispatch } from "@/redux/store"
+import { fetchUser } from "@/redux/features/userSlice"
+import { redirect } from "next/navigation"
 
 const LoginForm = () => {
+  const dispatch = useAppDispatch()
   const [loading, setLoading] = useState<boolean>(false)
 
   const form = useForm<z.infer<typeof SigninFormSchema>>({
@@ -27,9 +31,14 @@ const LoginForm = () => {
 
   const onSubmit = async (data: z.infer<typeof SigninFormSchema>) => {
     setLoading(true)
+
     const result = await signin(data)
-    toast.error(result.message)
+    dispatch(fetchUser())
+    if (result?.message) {
+      toast.error(result?.message)
+    }
     setLoading(false)
+    redirect('/home')
   }
 
   return (

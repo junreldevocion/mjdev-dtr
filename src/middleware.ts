@@ -13,6 +13,7 @@ const shutdownText = process.env.SHUTDOWN
 export async function middleware(req: NextRequest) {
 
   const path = req.nextUrl.pathname
+  const defaultPath = '/'
 
   const isShutdown = shutdownText === 'true'
 
@@ -21,32 +22,38 @@ export async function middleware(req: NextRequest) {
   const isProtectedRoute = protectedRoutes.includes(path)
   const isPublicRoute = publicRoutes.includes(path)
 
-  if (isShutdown && (isProtectedRoute || isPublicRoute)) {
+  const cookie = (await cookies()).get('session')?.value
+  const session = await decrypt(cookie)
+
+  if (isShutdown && (isProtectedRoute || isPublicRoute || path === defaultPath)) {
     console.log('Server is shutting down')
     return NextResponse.redirect(new URL('/maintenance', req.nextUrl))
   }
 
-  const cookie = (await cookies()).get('session')?.value
-  const session = await decrypt(cookie)
+  if (path === defaultPath && session?.userId) {
+    return NextResponse.redirect(new URL('/home', req.nextUrl))
+  }
 
-
-  if (isProtectedRoute && !session?.userId && !isShutdown) {
+  if (path === defaultPath && !session?.userId) {
     return NextResponse.redirect(new URL('/signin', req.nextUrl))
   }
 
-  if (isMaintenanceRoute && !session?.userId && !isShutdown) {
+
+  if (isProtectedRoute && !session?.userId) {
     return NextResponse.redirect(new URL('/signin', req.nextUrl))
   }
 
-  if (isMaintenanceRoute && session?.userId && !path.startsWith('/home')) {
+  if (isMaintenanceRoute && !session?.userId) {
+    return NextResponse.redirect(new URL('/signin', req.nextUrl))
+  }
+
+  if (isMaintenanceRoute && session?.userId) {
     return NextResponse.redirect(new URL('/home', req.nextUrl))
   }
 
   if (
     isPublicRoute &&
-    session?.userId &&
-    !path.startsWith('/home')
-    && !isShutdown
+    session?.userId
   ) {
     return NextResponse.redirect(new URL('/home', req.nextUrl))
   }
