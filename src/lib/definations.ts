@@ -33,8 +33,11 @@ export const UpdateUserFormSchema = z.object({
   newPassword: z
     .string()
     .min(2, { message: 'Be at least 2 characters long' })
-    .trim(),
-  image: z.any().optional(),
+    .trim()
+})
+
+export const UpdateProfileFormSchema = z.object({
+  image: z.any(),
 })
 
 export const SigninFormSchema = z.object({

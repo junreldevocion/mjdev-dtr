@@ -1,6 +1,6 @@
 'use server';
 
-import { SigninFormSchema, SignupFormSchema, UpdateUserFormSchema } from "@/lib/definations"
+import { SigninFormSchema, SignupFormSchema, UpdateProfileFormSchema, UpdateUserFormSchema } from "@/lib/definations"
 import { createSession, deleteSession } from "@/lib/session"
 import { redirect } from "next/navigation"
 import USER from "@/model/user.model";
@@ -66,10 +66,11 @@ export async function signup(request: z.infer<typeof SignupFormSchema>) {
   redirect('/home')
 }
 
-export async function logout() {
+export async function signOut() {
+  console.log('shit naman')
   await connectToMongoDB();
   await deleteSession()
-  revalidatePath('/home')
+  revalidatePath('/signin')
   redirect('/signin')
 }
 
@@ -104,8 +105,6 @@ export async function signin(request: z.infer<typeof SigninFormSchema>) {
 
   const isMatch = bcryptjs.compare(password, passwordHash)
 
-  console.log(isMatch, 'isMatch')
-
 
   if (!isMatch) {
     return {
@@ -114,8 +113,57 @@ export async function signin(request: z.infer<typeof SigninFormSchema>) {
   }
 
   await createSession((result?._id as string).toString())
-  revalidatePath('/home')
-  redirect('/home')
+
+}
+
+export async function updateProfile(formData: FormData) {
+  await connectToMongoDB();
+
+  const session = await verifySession()
+
+  const imageFile = formData.get('image') as File | null;
+
+  const validatedFields = UpdateProfileFormSchema.safeParse({
+    image: imageFile
+  })
+
+  if (!validatedFields.success) {
+    return {
+      errors: validatedFields.error.flatten().fieldErrors,
+    }
+  }
+
+  const result = await getUser()
+
+  if (!result) {
+    return {
+      message: 'User not exist!',
+    }
+  }
+
+  // Handle image upload if provided
+  let imageUrl = result?.image;
+  if (imageFile) {
+    // In a real application, you would upload the image to a storage service
+    // and get back a URL. For this example, we'll use a data URL
+    // You would replace this with actual image upload logic
+    try {
+      // Convert the file to a base64 string
+      const buffer = await imageFile.arrayBuffer();
+      const base64 = Buffer.from(buffer).toString('base64');
+      const mimeType = imageFile.type;
+      imageUrl = `data:${mimeType};base64,${base64}`;
+    } catch (error) {
+      console.error('Error processing image:', error);
+      // Keep the existing image if there's an error
+    }
+  }
+  await USER.findByIdAndUpdate(session?.userId, {
+    image: imageUrl
+  }, {
+    new: true,
+    runValidators: true,
+  });
 
 }
 
@@ -129,7 +177,6 @@ export async function updateUser(formData: FormData) {
   const email = formData.get('email') as string;
   const oldPassword = formData.get('oldPassword') as string;
   const newPassword = formData.get('newPassword') as string;
-  const imageFile = formData.get('image') as File | null;
 
   // 1. Validate form fields
   const validatedFields = UpdateUserFormSchema.safeParse({
@@ -137,7 +184,6 @@ export async function updateUser(formData: FormData) {
     email,
     newPassword,
     oldPassword,
-    image: imageFile
   })
 
   if (!validatedFields.success) {
@@ -161,29 +207,10 @@ export async function updateUser(formData: FormData) {
 
   const hashedPassword = await bcryptjs.hash(validatedNewPassword, 10)
 
-  // Handle image upload if provided
-  let imageUrl = result.image;
-  if (imageFile) {
-    // In a real application, you would upload the image to a storage service
-    // and get back a URL. For this example, we'll use a data URL
-    // You would replace this with actual image upload logic
-    try {
-      // Convert the file to a base64 string
-      const buffer = await imageFile.arrayBuffer();
-      const base64 = Buffer.from(buffer).toString('base64');
-      const mimeType = imageFile.type;
-      imageUrl = `data:${mimeType};base64,${base64}`;
-    } catch (error) {
-      console.error('Error processing image:', error);
-      // Keep the existing image if there's an error
-    }
-  }
-
   await USER.findByIdAndUpdate(session?.userId, {
     name: validatedName,
     email: validatedEmail,
     password: hashedPassword,
-    image: imageUrl
   }, {
     new: true,
     runValidators: true,

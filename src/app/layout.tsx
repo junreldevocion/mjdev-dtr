@@ -4,6 +4,7 @@ import "./globals.css";
 import Navbar from "@/components/Navbar";
 import { connectToMongoDB } from "@/lib/mongodb";
 import { Toaster } from "sonner";
+import { Providers } from '@/redux/providers';
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -33,9 +34,10 @@ export default async function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        {shutdownText === "false" && (<Navbar />)}
-
-        {children}
+        <Providers>
+          {shutdownText === "false" && (<Navbar />)}
+          {children}
+        </Providers>
         <Toaster position="top-right" />
       </body>
     </html>

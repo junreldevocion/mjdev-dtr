@@ -1,12 +1,13 @@
 'use client'
 
-import { useState } from "react";
-import useSWR from "swr";
+import { useEffect, useState } from "react";
 import { ChevronDown, Settings, LogOut, User } from "lucide-react";
 import Link from "next/link";
-import { logout } from "@/app/actions/auth";
-import { fetcher } from "@/lib/utils";
+// import { logout } from "@/app/actions/auth";
 import Image from "next/image";
+import { useAppDispatch, useAppSelector } from "@/redux/store";
+import { fetchUser, logout } from "@/redux/features/userSlice";
+import { signOut } from "@/app/actions/auth";
 
 // Custom loader for data URLs
 const dataUrlLoader = ({ src }: { src: string }) => {
@@ -14,12 +15,22 @@ const dataUrlLoader = ({ src }: { src: string }) => {
 };
 
 const Navbar = () => {
-  const { data } = useSWR('/api/auth', fetcher)
+  const dispatch = useAppDispatch()
+  const { name, image, email } = useAppSelector((state) => state.user)
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   const toggleDropdown = () => {
     setIsDropdownOpen((prev) => !prev);
   };
+
+  useEffect(() => {
+    dispatch(fetchUser())
+  }, [dispatch])
+
+  const handleSubmitLogout = async () => {
+    dispatch(logout())
+    await signOut()
+  }
 
   // Check if the image is a data URL
   const isDataUrl = (url: string) => {
@@ -38,26 +49,26 @@ const Navbar = () => {
               MJDEV-DTR
             </span>
             <span className="text-sm font-medium text-gray-500 dark:text-gray-400 group-hover:text-gray-700 dark:group-hover:text-gray-300 transition-colors">
-              {data?.name}
+              {name}
             </span>
           </div>
         </Link>
 
-        {data?.name && (
+        {name && (
           <div className="relative">
             <button
               onClick={toggleDropdown}
               className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
             >
-              {data?.image ? (
+              {image ? (
                 <div className="relative w-8 h-8 rounded-full overflow-hidden">
                   <Image
-                    src={data.image}
-                    alt={data.name}
+                    src={image}
+                    alt={name}
                     fill
                     className="object-cover"
-                    loader={isDataUrl(data.image) ? dataUrlLoader : undefined}
-                    unoptimized={isDataUrl(data.image)}
+                    loader={isDataUrl(image) ? dataUrlLoader : undefined}
+                    unoptimized={isDataUrl(image)}
                   />
                 </div>
               ) : (
@@ -75,15 +86,15 @@ const Navbar = () => {
               <div className="absolute right-0 mt-2 w-56 bg-white rounded-lg shadow-lg dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
                 <div className="p-3 border-b border-gray-200 dark:border-gray-700">
                   <div className="flex items-center gap-3">
-                    {data?.image ? (
+                    {image ? (
                       <div className="relative w-10 h-10 rounded-full overflow-hidden">
                         <Image
-                          src={data.image}
-                          alt={data.name}
+                          src={image}
+                          alt={name}
                           fill
                           className="object-cover"
-                          loader={isDataUrl(data.image) ? dataUrlLoader : undefined}
-                          unoptimized={isDataUrl(data.image)}
+                          loader={isDataUrl(image) ? dataUrlLoader : undefined}
+                          unoptimized={isDataUrl(image)}
                         />
                       </div>
                     ) : (
@@ -92,8 +103,8 @@ const Navbar = () => {
                       </div>
                     )}
                     <div>
-                      <p className="text-sm font-medium text-gray-900 dark:text-white">{data?.name}</p>
-                      <p className="text-xs text-gray-500 dark:text-gray-400">{data?.email}</p>
+                      <p className="text-sm font-medium text-gray-900 dark:text-white">{name}</p>
+                      <p className="text-xs text-gray-500 dark:text-gray-400">{email}</p>
                     </div>
                   </div>
                 </div>
@@ -107,15 +118,16 @@ const Navbar = () => {
                     </Link>
                   </li>
                   <li>
-                    <form action={logout}>
-                      <button
-                        type="submit"
-                        className="flex items-center gap-2 w-full px-4 py-2 text-sm text-red-600 hover:bg-red-50 dark:text-red-400 dark:hover:bg-red-900/20 transition-colors"
-                      >
-                        <LogOut size={16} />
-                        Logout
-                      </button>
-                    </form>
+                    {/* <form onSubmit={handleSubmitLogout}> */}
+                    <button
+                      type="submit"
+                      onClick={handleSubmitLogout}
+                      className="flex items-center gap-2 w-full px-4 py-2 text-sm text-red-600 hover:bg-red-50 dark:text-red-400 dark:hover:bg-red-900/20 transition-colors"
+                    >
+                      <LogOut size={16} />
+                      Logout
+                    </button>
+                    {/* </form> */}
                   </li>
                 </ul>
               </div>
