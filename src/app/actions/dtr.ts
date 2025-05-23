@@ -109,8 +109,6 @@ export const updateDTR = async (request: z.infer<typeof DTRFormSchema>) => {
     new: true,
     runValidators: true,
   });
-
-  revalidatePath("/home");
   redirect('/home')
 
 }
