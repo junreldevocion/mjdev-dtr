@@ -89,9 +89,7 @@ export const createDTR = async (request: z.infer<typeof DTRFormSchema>) => {
   const newDTR = await DTR.create({ ...data, userId: session.userId });
   //  Saving the new dtr to the database
   await newDTR.save();
-  // Triggering revalidation of the specified path("/")
-  revalidatePath("/home");
-  redirect('/home')
+  redirect('/')
 };
 
 export const updateDTR = async (request: z.infer<typeof DTRFormSchema>) => {
@@ -111,8 +109,6 @@ export const updateDTR = async (request: z.infer<typeof DTRFormSchema>) => {
     new: true,
     runValidators: true,
   });
-
-  revalidatePath("/home");
   redirect('/home')
 
 }

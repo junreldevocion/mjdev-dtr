@@ -25,6 +25,7 @@ import { CheckboxProps } from "@radix-ui/react-checkbox"
 import { IDTR } from "@/model/dtr.model"
 import { toast } from "sonner"
 import { DTRFormSchema } from "@/lib/definations"
+import { useState } from "react"
 
 
 
@@ -34,6 +35,8 @@ interface DtrFormProps {
 }
 
 export function DtrForm({ action, data }: DtrFormProps) {
+
+  const [isLoading, setIsLoading] = useState<boolean>(false)
 
   const { timeInOutDate, timeIn, timeOut } = formatResponse(data!)
 
@@ -55,6 +58,8 @@ export function DtrForm({ action, data }: DtrFormProps) {
       timeInOutDate: format(data.timeInOutDate, 'yyyy-MM-dd') as unknown as Date
     }
 
+    setIsLoading(true)
+
     await action(formatData)
 
     toast("Event has been created", {
@@ -64,6 +69,8 @@ export function DtrForm({ action, data }: DtrFormProps) {
         onClick: () => console.log("Undo"),
       },
     })
+
+    setIsLoading(false)
   }
 
   return (
@@ -155,7 +162,7 @@ export function DtrForm({ action, data }: DtrFormProps) {
           />
         </div>
         <div>
-          <Button type="submit">Submit <Save /></Button>
+          <Button type="submit" disabled={isLoading} >{isLoading ? 'submitting...' : 'submit'}<Save /></Button>
         </div>
       </form>
     </Form >
